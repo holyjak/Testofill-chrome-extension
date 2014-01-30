@@ -2,7 +2,7 @@
 // ref. http://d.hatena.ne.jp/umezo/20091115/1258291572
 var core = {
   /**
-   * 
+   *
    * @return Object
    */
   "getOptions": function(){
@@ -24,3 +24,16 @@ window.onload = function(){
     sendResponse(ret);
   });
 }
+
+// Called when the user clicks on the browser action.
+chrome.browserAction.onClicked.addListener(function(tab) {
+  // No tabs or host permissions needed!
+  chrome.tabs.executeScript({
+    file: 'jquery-1.8.2.min.js',
+    allFrames: true,
+  });
+  chrome.tabs.executeScript({
+    file: 'run.js',
+    allFrames: true,
+  });
+});

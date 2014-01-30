@@ -6,6 +6,17 @@
 
   "description": "This chrome extension fills out forms automatically.",
   "icons": {},
+  "permissions": [
+	    "activeTab"
+  ],
+  "browser_action": {
+    "default_title": "Autofill",
+    "default_icon": "autofill_16x16.png" // by Designmodo ,https://www.iconfinder.com/icons/115700/
+	},
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
   "content_scripts": [
     {
       "matches" : [
@@ -13,7 +24,8 @@
         "https://*/*"
       ],
       "js": ["jquery-1.8.2.min.js", "run.js"],
-      "run_at": "document_idle" // or document_start, document_end, document_idle
+      "run_at": "document_idle", // or document_start, document_end, document_idle
+      "all_frames": true
     }
   ],
   "options_page": "options.html",

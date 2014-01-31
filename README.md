@@ -45,6 +45,7 @@ ChangeLog
 
 - 2014-01 v1.2 release
   - JSON config using chrome.storage, move from jQuery to the smaller Sizzle,
+    event page inst.of background, manifestv v 2
 - 2014-01 v1.1 release
   - browser action, work on frames
 - 2012-09-26 v1.0 release
@@ -53,7 +54,6 @@ ChangeLog
 Todo
 ----------------
 
-- NOW: event page inst.of background
 - support multiple sets of values for the same form & selection from them
 - find by label?
 - (better) support for radio/check boxes

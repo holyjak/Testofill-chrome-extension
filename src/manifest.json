@@ -3,6 +3,7 @@
   "name": "Testofill, Form Filler for Testers",
   "version": "0.1",
   "manifest_version": 2,
+  "author": "Jakub Holy <http://theholyjava.wordpress.com/>",
 
   "description": "Enable testers to fill forms automatically/on-demand with predefined and/or generated values. It is possible to define and choose from multiple sets of values for a given form.",
   "icons": {},
@@ -12,7 +13,10 @@
   ],
   "browser_action": {
     "default_title": "Testofill",
-    "default_icon": "autofill_16x16.png" // by Designmodo ,https://www.iconfinder.com/icons/115700/
+    "default_icon": {
+      // Note: only 19 and 38 supported ,we have to lie for now
+      "19": "autofill_16x16.png" // by Designmodo ,https://www.iconfinder.com/icons/115700/
+    }
 	},
   "background": {
     "scripts": ["background.js"],
@@ -30,5 +34,8 @@
     }
   ],
   "options_page": "options.html",
-  "background": { "page": "background.html" }
+  "background": {
+    "scripts": ["events.js"],
+    "persistent": false
+  }
 }

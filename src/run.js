@@ -10,11 +10,13 @@ function fillForms(ruleSets) {
   var ruleSet = ruleSets[0]; // TODO use the set select by the user / default to 1st
 
   ruleSet.fields.forEach(function(field) {
-    var fieldElms = $(field.query);
+    var fieldElms = Sizzle(field.query);
     if (fieldElms.length === 0) {
       unmatchedSelectors.push(field);
     } else {
-      fieldElms.val(field.value);
+      fieldElms.forEach(function(inputElm) {
+        inputElm.value = field.value;
+      });
     }
   });
 

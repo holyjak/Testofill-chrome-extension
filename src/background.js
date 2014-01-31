@@ -29,7 +29,7 @@ window.onload = function(){
 chrome.browserAction.onClicked.addListener(function(tab) {
   // No tabs or host permissions needed!
   chrome.tabs.executeScript({
-    file: 'jquery-1.8.2.min.js',
+    file: 'sizzle-20140125.min.js',
     allFrames: true,
   });
   chrome.tabs.executeScript({

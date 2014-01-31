@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>User query options</title>
     <script src="./jquery-1.8.2.min.js" type="text/javascript"></script>
-    <script src="./options.js" type="text/javascript"></script>
   </head>
   <style type="text/css">
     body{
@@ -44,4 +43,28 @@
   </table>
   <a href="#" class="new">New Query</a>
 
+    <div>
+        <textarea id="rules" cols="100" rows="60" style="display:block">
+        {
+          forms: {
+            "mysite.com/.*/myform": [
+              {
+                name: "Bob the Test Manager",
+                doc: "Register as the test manager Bob",
+                fields: [
+                  {query: "[name='fname']", value: "Bob"},
+                  {query: "[name='sname']", value: "Testofill"},
+                  {query: "[id$='phone']", code: function(){return "+471234567" + Random.nextInt();}}
+                ]
+              }
+            ]
+          }
+        }
+        </textarea>
+        <button id="save">Save</button> <span id="status" style="color:green;font-style:italic">&nbsp;</div>
+    </div>
+
 </body>
+
+<script src="options.js"></script>
+</html>

@@ -1,27 +1,37 @@
-Autofill forms Chrome extension
-================================
+Testofill, the Form Filler for Testers Chrome Extension
+=======================================================
 
-This chrome extension fills out forms automatically.
+Goal: Enable testers to fill forms automatically/on-demand with predefined and/or generated values.
+It is possible to define and choose from multiple sets of values for a given form.
 
-As you know, Chrome implements autofill function.
-But this function doesn't work on some website.
+State: Automatic/on-demand form filling with predefined values; no value generation or multiple sets yet.
 
-You set a query and a value, then this extension fills out a value by the query
+Fields are found using CSS3 selectors (via [Sizzle]()). The configuration of the plugin is a JavaScript object.
+Forms are filled either automatically or when you click the plugin icon.
+
+Based on [work by Akkunchoi](http://akkunchoi.github.io/Autofill-chrome-extension).
 
 
-<http://akkunchoi.github.io/Autofill-chrome-extension>
+Example of configuration
+------------------------
 
+(Extensions - Testofill - Options)
 
-Usage
-----------------
-
-Open "Options" of this extension,
-And click "New Query",
-Then three text field will appear.
-
-- Url as regular expression
-- Query as [jQuery Selectors](http://api.jquery.com/category/selectors/)
-- Value as string you want to input
+{
+  forms: {
+    "mysite.com/.*/myform": [ // (partial) regular expression or a substring of the form's URL
+      {
+        name: "Bob the Test Manager",  // (optional) to distinguish multiple sets of values for the same form
+        doc: "Register as the test manager Bob", // (optional) displayed next to the name in a popup
+        fields: [
+          {query: "[name='fname']", value: "Bob"},
+          {query: "[name='sname']", value: "Testofill"},
+          {query: "[id$='phone']", code: function(){return "+471234567" + Random.nextInt();}}
+        ]
+      }
+    ]
+  }
+}
 
 Installation
 ---------------
@@ -39,6 +49,10 @@ ChangeLog
 
 Todo
 ----------------
-- Find contents inside frames
-- Notification
-- Import/Export
+- NOW: move to Sizzle, JSON config using chrome.storage, event page
+- support multiple sets of values for the same form & selection from them
+- find by label?
+- (better) support for radio/check boxes
+- generated values (using predefined generators such as randomNumber, ability to add new generators, or a custom function)
+- add option for turning autocomplete on/off
+- ? make allFrames configurable

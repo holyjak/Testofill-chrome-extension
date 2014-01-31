@@ -1,4 +1,4 @@
-// optionsで保存したlocalStorageにアクセス
+// TODO: OLD CODE, delete
 chrome.extension.sendRequest({
   "action": "getOptions",
   "args": []
@@ -20,4 +20,11 @@ chrome.extension.sendRequest({
   }
 });
 
-
+chrome.storage.sync.get('testofill.rules', function(items) {
+  if (typeof chrome.runtime.lastError === "undefined") {
+    var rules = items['testofill.rules'];
+    console.log("Run.js: Rules loaded: ", rules);
+  } else {
+    console.log("ERROR Run.js: Rules loading failed", chrome.runtime.lastError);
+  }
+});

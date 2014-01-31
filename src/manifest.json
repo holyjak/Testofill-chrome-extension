@@ -24,7 +24,7 @@
         "http://*/*",
         "https://*/*"
       ],
-      "js": ["sizzle-20140125.min.js", "run.js"],
+      "js": ["sizzle-20140125.min.js", "testofill-run.js"],
       "run_at": "document_idle", // or document_start, document_end, document_idle
       "all_frames": true
     }

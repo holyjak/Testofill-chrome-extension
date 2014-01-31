@@ -44,7 +44,7 @@ ChangeLog
 ----------------
 
 - 2014-01 v1.2 release
-  - JSON config using chrome.storage
+  - JSON config using chrome.storage, move from jQuery to the smaller Sizzle,
 - 2014-01 v1.1 release
   - browser action, work on frames
 - 2012-09-26 v1.0 release
@@ -53,14 +53,13 @@ ChangeLog
 Todo
 ----------------
 
-- NOW: move to Sizzle, event page inst.of background
+- NOW: event page inst.of background
 - support multiple sets of values for the same form & selection from them
 - find by label?
 - (better) support for radio/check boxes
 - generated values (using predefined generators such as randomNumber, ability to add new generators, or a custom function)
 - add option for turning autocomplete on/off
 - ? make allFrames configurable
-- rename run.js to testofill[-run].js to show nicely in Console logs
 - syntax highlight for the rules textarea using json; real-time validation?
 
 Questions etc.

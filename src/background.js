@@ -33,7 +33,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     allFrames: true,
   });
   chrome.tabs.executeScript({
-    file: 'run.js',
+    file: 'testofill-run.js',
     allFrames: true,
   });
 });

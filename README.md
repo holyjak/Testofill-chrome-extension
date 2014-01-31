@@ -55,8 +55,9 @@ Todo
 ----------------
 
 - support multiple sets of values for the same form & selection from them
-- find by label?
-- (better) support for radio/check boxes
+- FORM:
+    - find by label?
+    - (better) support for radio/check boxes
 - generated values (using predefined generators such as randomNumber, ability to add new generators, or a custom function)
 - add option for turning autocomplete on/off
 - ? make allFrames configurable

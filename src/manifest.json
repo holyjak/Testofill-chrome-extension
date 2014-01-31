@@ -9,14 +9,16 @@
   "icons": {},
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "tabs" // needed???
   ],
   "browser_action": {
     "default_title": "Testofill",
     "default_icon": {
       // Note: only 19 and 38 supported ,we have to lie for now
       "19": "autofill_16x16.png" // by Designmodo ,https://www.iconfinder.com/icons/115700/
-    }
+    },
+    "default_popup": "popup.html"
 	},
   "background": {
     "scripts": ["background.js"],

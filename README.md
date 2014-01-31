@@ -42,17 +42,27 @@ directory. (You can then also click "Pack extension...".)
 
 ChangeLog
 ----------------
+
+- 2014-01 v1.2 release
+  - JSON config using chrome.storage
 - 2014-01 v1.1 release
-    - browser action, work on frames
+  - browser action, work on frames
 - 2012-09-26 v1.0 release
 
 
 Todo
 ----------------
-- NOW: move to Sizzle, JSON config using chrome.storage, event page
+
+- NOW: move to Sizzle, event page inst.of background
 - support multiple sets of values for the same form & selection from them
 - find by label?
 - (better) support for radio/check boxes
 - generated values (using predefined generators such as randomNumber, ability to add new generators, or a custom function)
 - add option for turning autocomplete on/off
 - ? make allFrames configurable
+- rename run.js to testofill[-run].js to show nicely in Console logs
+- syntax highlight for the rules textarea using json; real-time validation?
+
+Questions etc.
+
+- When options changed, do we need to inform the content script?

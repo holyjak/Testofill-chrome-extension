@@ -1,110 +1,43 @@
-// TODO: OLD CODE, delete
-jQuery(function($){
-  var page = $('#options-page');
-  var newQuery = page.find('.new');
-  var tpl = page.find('.template');
-  tpl.hide();
-  var id = 0;
+// Options storage
 
-  function createQuery(id){
-    if ($('#row-' + id).length > 0){
-      return $('#row-' + id);
-    }
-    var c = tpl.clone();
-    c.removeClass('template');
-    tpl.parent().append(c);
-    c.show();
-    c.attr('id', 'row-' + id);
-    c.find('.url').attr('name', 'url-' + id);
-    c.find('.query').attr('name', 'query-' + id);
-    c.find('.value').attr('name', 'value-' + id);
-
-    c.find('.remove').click(function(){
-      c.remove();
-      var id = c.attr('id').replace(/row-/, '');
-      localStorage.removeItem('url-' + id);
-      localStorage.removeItem('query-' + id);
-      localStorage.removeItem('value-' + id);
-    });
-    return c;
+function showStatus(message, type) {
+  var statusElm = document.getElementById("status");
+  if (type === "error") {
+    statusElm.innerHTML = '<span style="color:red">ERROR: ' + message + '</span>';
+  } else {
+    statusElm.innerHTML = '<span style="color:blue">' + message + '</span>';;
   }
-  newQuery.click(function(){
-    createQuery(++id);
-    return false;
-  });
 
-  page.find('input[type=checkbox]').each(function(){
-    var key = $(this).attr('name');
-    localStorage[key] = localStorage[key] || '';
-    if (localStorage[key]){
-      $(this).attr('checked', 'checked');
-    }
-    $(this).change(function(){
-      if ($(this).attr('checked')){
-        localStorage[key] = 'checked';
-      }else{
-        localStorage[key] = '';
-      }
-    });
-  });
+  // TODO fix this, does not work:
+  setTimeout(function() {
+    status.innerHTML = "";
+  }, 750);
+}
 
-  page.find('input[type=text]').live('keyup', function(){
-    var key = $(this).attr('name');
-    localStorage[key] = $(this).val();
-  });
+function showError(message) {
+  showStatus(message, "error");
+}
 
-  for (var k in localStorage){
-    if (k.match(/^(query|url|value)-(\d+)/)){
-      var type = RegExp.$1;
-      var id = RegExp.$2;
-      var c = createQuery(id);
-      c.find('.' + type).val(localStorage[k]);
-    }
-  };
-
-  if (id == 0){
-    var c = createQuery(++id);
-    c.find('.url').val('http://akkunchoi.github.com/Autofill-chrome-extension/.*');
-    c.find('.query').val('input[name=example]');
-    c.find('.value').val('Hello world!');
-    c.find('input').trigger('keyup');
-  }
-});
-//-----------------------------
-function save_options() {
-
-  var configurationElm = document.getElementById("rules");
-  console.log("New config value: " + configurationElm.value);
-
-  var fakeConfig = {
-    forms: {
-      "mysite.com/.*/myform": [ // (partial) regular expression or a substring of the form's URL
-        {
-          name: "Bob the Test Manager",  // (optional) to distinguish multiple sets of values for the same form
-          doc: "Register as the test manager Bob", // (optional) displayed next to the name in a popup
-          fields: [
-            {query: "[name='fname']", value: "Bob"},
-            {query: "[name='sname']", value: "Testofill"},
-            {query: "[id$='phone']", code: "function(){return '+471234567' + Random.nextInt();}"} // Impossible: eval not allowed
-          ]
-        }
-      ]
-    }
-  };
-
-  chrome.storage.sync.set({'testofill.rules': fakeConfig}, function() {
+function saveToStorage(json) {
+  chrome.storage.sync.set({'testofill.rules': json}, function() {
     if (typeof chrome.runtime.lastError === "undefined") {
-      // Update status to let user know options were saved.
-      console.log("rules saved");
-      var status = document.getElementById("status");
-      status.innerHTML = "Options Saved.";
-  //     setTimeout(function() {
-  //       status.innerHTML = "";
-  //     }, 750);
+      showStatus("Options Saved.");
     } else {
+      showError("saving failed: " + chrome.runtime.lastError);
       console.log("ERROR saving rules", chrome.runtime.lastError);
     }
   })
+}
+
+function save_options() {
+  var rulesElm = document.getElementById("rules");
+  try {
+    var rules = JSON.parse(rulesElm.value);
+    saveToStorage(rules);
+  } catch (e) {
+    showError("The rules are not a valid JSON object: " + e);
+    console.error("Rules parsing error: ", e, rulesElm.value);
+  }
 }
 
 function restore_options() {
@@ -113,7 +46,12 @@ function restore_options() {
     if (typeof chrome.runtime.lastError === "undefined") {
       var rules = items['testofill.rules'];
       console.log("Rules restored: ", rules);
+      if (typeof rules !== "undefined") { // TODO verify correct of no saved rules
+        var rulesElm = document.getElementById("rules");
+        rulesElm.value = JSON.stringify(rules, null, "  ");
+      }
     } else {
+      showError("Restoring the rules failed: " + chrome.runtime.lastError);
       console.log("ERROR restoring rules", chrome.runtime.lastError);
     }
   });

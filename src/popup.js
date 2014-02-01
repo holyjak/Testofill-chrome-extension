@@ -1,23 +1,23 @@
+// Render the select of available rule sets
+function renderRuleSetSelection(ruleSets) {
+  var ruleSetList = document.getElementById("ruleSetList");
+  ruleSetList.size = ruleSets.length;
 
-function sendMessage() {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    var lastTabId = tabs[0].id;
-    chrome.tabs.sendMessage(lastTabId, "Background page started.");
+  ruleSets.forEach(function(ruleSet, idx){
+    var label = ruleSet.name + (ruleSet.doc ? " - " + ruleSet.doc : "");
+    ruleSetList.add(new Option(label, idx));
   });
 }
 
-function renderRuleSetSelection(ruleSets) {
-  var ruleSetList = document.getElementById("ruleSetList");
-  var tpl = document.getElementById("template");
+// Get the selected ruleSet, send message to the content script to apply it
+function handleRuleSetSelected(evt, tab, ruleSets) {
+  event.preventDefault();
+  var select = evt.target;
+  var ruleSetIdx = select.value;
 
-  ruleSets.forEach(function(ruleSet){
-    var item = tpl.cloneNode(true);
-    item.innerHTML = ruleSet.name + " - " + ruleSet.doc;
-    ruleSetList.appendChild(item);
-  });
+  var ruleSet = ruleSets[ruleSetIdx];
 
-  tpl.style.display = 'none'; // hide it
- // TODO is the list reset when popup redislayed?
+  sendMessageToContentScript(tab, ruleSet);
 }
 
 // TODO Do not copy, reuse from run.js
@@ -36,26 +36,22 @@ function findMatchingRules(currentUrl, ruleSetsCallback) {
   });
 }
 
-function sendMessageToContentScript(tab) {
+function sendMessageToContentScript(tab, message) {
     chrome.tabs.executeScript(tab.id, {file: "sizzle-20140125.min.js"}, function() {
       chrome.tabs.executeScript(tab.id, {file: "testofill-run.js"}, function() {
-        // Note: we also sent a message above, upon loading the event page,
-        // but the content script will not be loaded at that point, so we send
-        // another here.
-        sendMessage();
+        chrome.tabs.sendMessage(tab.id, message);
       });
     });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  //document.querySelector('#button').addEventListener(      'click', sendRequest);
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-
     var tab = tabs[0];
-
     findMatchingRules(tab.url, function(ruleSets) {
       renderRuleSetSelection(ruleSets);
+      document.querySelector('#ruleSetList').addEventListener('change', function(evt){
+        handleRuleSetSelected(evt, tab, ruleSets);
+      });
     });
-    sendMessageToContentScript(tab);
   });
 });

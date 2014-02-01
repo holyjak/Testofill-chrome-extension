@@ -44,8 +44,9 @@ ChangeLog
 ----------------
 
 - 2014-01 v1.2 release
-  - JSON config using chrome.storage, move from jQuery to the smaller Sizzle,
-    event page inst.of background, manifestv v 2
+    - JSON config using chrome.storage, move from jQuery to the smaller Sizzle,
+      event page inst.of background, manifestv v 2
+    - support multiple sets of values for the same form & selection from them
 - 2014-01 v1.1 release
   - browser action, work on frames
 - 2012-09-26 v1.0 release
@@ -54,7 +55,8 @@ ChangeLog
 Todo
 ----------------
 
-- support multiple sets of values for the same form & selection from them
+- ! Hide popup after selecting
+- In on onUpdate tab event - find # sets, set their count in the badge, and either set browser action if 1 or set popup if 2+
 - FORM:
     - find by label?
     - (better) support for radio/check boxes
@@ -62,7 +64,5 @@ Todo
 - add option for turning autocomplete on/off
 - ? make allFrames configurable
 - syntax highlight for the rules textarea using json; real-time validation?
-
-Questions etc.
-
-- When options changed, do we need to inform the content script?
+- handle error cases - no sets, no set selected, ...
+- save options on C-S / M-S

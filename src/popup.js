@@ -37,6 +37,7 @@ function findMatchingRules(currentUrl, ruleSetsCallback) {
   });
 }
 
+// TODO Resue, not copy from events.js
 function sendMessageToContentScript(tab, message) {
     chrome.tabs.executeScript(tab.id, {file: "sizzle-20140125.min.js"}, function() {
       chrome.tabs.executeScript(tab.id, {file: "testofill-run.js"}, function() {

@@ -26,22 +26,6 @@ function fillForms(ruleSet) {
 
 }
 
-/* Get the rules and try to apply them to this page, if matched */
-function findMatchingRules(currentUrl, ruleSetsCallback) {
-  chrome.storage.sync.get('testofill.rules', function(items) {
-    if (typeof chrome.runtime.lastError === "undefined") {
-      var rules = items['testofill.rules'];
-      for (var urlRE in rules.forms) {
-        if (currentUrl.match(new RegExp(urlRE))) {
-          ruleSetsCallback(rules.forms[urlRE]);
-        }
-      }
-    } else {
-      console.log("ERROR Run.js: Rules loading failed", chrome.runtime.lastError);
-    }
-  });
-}
-
 // Listen for message from the popup with the selected ruleSet
 chrome.runtime.onMessage.addListener(function(ruleSet, sender, sendResponseFn){
   //console.log("Msg retrieved; sender is extension: ", !sender.tab, ruleSet);

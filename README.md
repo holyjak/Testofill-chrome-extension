@@ -55,7 +55,6 @@ ChangeLog
 Todo
 ----------------
 
-- ! Hide popup after selecting
 - In on onUpdate tab event - find # sets, set their count in the badge, and either set browser action if 1 or set popup if 2+
 - FORM:
     - find by label?

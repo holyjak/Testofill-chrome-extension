@@ -18,6 +18,7 @@ function handleRuleSetSelected(evt, tab, ruleSets) {
   var ruleSet = ruleSets[ruleSetIdx];
 
   sendMessageToContentScript(tab, ruleSet);
+  window.close();
 }
 
 // TODO Do not copy, reuse from run.js

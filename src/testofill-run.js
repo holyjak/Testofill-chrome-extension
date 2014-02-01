@@ -41,3 +41,20 @@ function fillFormsUsingFirstRuleSet(ruleSets) {
   fillForms(ruleSets[0]);
 }
 findMatchingRules(document.location.href, fillFormsUsingFirstRuleSet);
+
+
+// TODO Reuse, do not copy from events.js
+function findMatchingRules(currentUrl, ruleSetsCallback) {
+  chrome.storage.sync.get('testofill.rules', function(items) {
+    if (typeof chrome.runtime.lastError === "undefined") {
+      var rules = items['testofill.rules'];
+      for (var urlRE in rules.forms) {
+        if (currentUrl.match(new RegExp(urlRE))) {
+          ruleSetsCallback(rules.forms[urlRE]);
+        }
+      }
+    } else {
+      console.log("ERROR Run.js: Rules loading failed", chrome.runtime.lastError);
+    }
+  });
+}

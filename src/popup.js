@@ -17,8 +17,10 @@ function handleRuleSetSelected(evt, tab, ruleSets) {
 
   var ruleSet = ruleSets[ruleSetIdx];
 
-  sendMessageToContentScript(tab, ruleSet);
-  window.close();
+  chrome.runtime.getBackgroundPage(function(bp){
+    bp.sendMessageToContentScript(tab, ruleSet);
+    window.close();
+  });
 }
 
 // TODO Do not copy, reuse from run.js
@@ -35,15 +37,6 @@ function findMatchingRules(currentUrl, ruleSetsCallback) {
       console.log("ERROR Run.js: Rules loading failed", chrome.runtime.lastError);
     }
   });
-}
-
-// TODO Resue, not copy from events.js
-function sendMessageToContentScript(tab, message) {
-    chrome.tabs.executeScript(tab.id, {file: "sizzle-20140125.min.js"}, function() {
-      chrome.tabs.executeScript(tab.id, {file: "testofill-run.js"}, function() {
-        chrome.tabs.sendMessage(tab.id, message);
-      });
-    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {

@@ -51,6 +51,9 @@ ChangeLog
   - browser action, work on frames
 - 2012-09-26 v1.0 release
 
+FIXME
+-----
+- Single ruleset: button does not work, i.e. form not filled
 
 Todo
 ----------------
@@ -65,3 +68,4 @@ Todo
 - syntax highlight for the rules textarea using json; real-time validation?
 - handle error cases - no sets, no set selected, ...
 - save options on C-S / M-S
+- remove duplication between run and events.js

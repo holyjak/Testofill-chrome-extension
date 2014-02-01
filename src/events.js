@@ -24,7 +24,11 @@ function sendMessageToContentScript(tab, message) {
 }
 
 //---------------------------------------------------------------- listeners
-/* Set # ruleSets on icon when tab/url changes, set popup. */
+/*
+ * Set # ruleSets on icon when tab/url changes, set popup.
+ *
+ * BEWARE: Seems not to be triggered for cached pages.
+ */
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (changeInfo.url) {
     findMatchingRules(changeInfo.url, function(ruleSets){
@@ -32,11 +36,23 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
       chrome.browserAction.setBadgeText({tabId: tabId, text: ruleSets.length.toString()}); // FIXME has no effect?!
       chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color: '#04B4AE'});
 
-      // TODO If 2+ rule sets => set popup, if 1, set browserAction
+      // If 2+ rule sets => set popup (replaces the default browserAction.onCliked action set below)
+      if (ruleSets.length > 1) {
+        chrome.browserAction.setPopup({tabId: tabId, popup: 'popup.html'});
+      } else {
+        chrome.browserAction.setPopup({tabId: tabId, popup: ''}); // remove the popup, if any (needed????)
+      }
     });
   }
   // Note: changeInfo.status loading/complete/undefined; url only while 'loading'
   // - Not triggered when another tab activated (i.e. switching tabs)
   // - Also triggered for new tab, url=chrome://newtab/
   // - Also triggered when navigating to an anchor on the same page or back
+});
+
+/* Only triggered if there is 0-1 ruleSets (i.e. of there is no popup win). */
+chrome.browserAction.onClicked.addListener(function(tab){
+  findMatchingRules(tab.url, function(ruleSets){
+    sendMessageToContentScript(tab, ruleSets[0]);
+  });
 });

@@ -16,22 +16,44 @@ Example of configuration
 ------------------------
 
 (Extensions - Testofill - Options)
-
+```json
 {
-  forms: {
-    "mysite.com/.*/myform": [ // (partial) regular expression or a substring of the form's URL
+  "forms": {
+    "me:1111/test.html.*#one": [
       {
-        name: "Bob the Test Manager",  // (optional) to distinguish multiple sets of values for the same form
-        doc: "Register as the test manager Bob", // (optional) displayed next to the name in a popup
-        fields: [
-          {query: "[name='fname']", value: "Bob"},
-          {query: "[name='sname']", value: "Testofill"},
-          {query: "[id$='phone']", code: function(){return "+471234567" + Random.nextInt();}}
-        ]
+        "fields": [
+          {
+            "query": "[name='q']",
+            "value": "Single rule set rulez"
+          }
+        ],
+        "name": "Form with one ruleSet"
+      }
+    ],
+    "me:1111/test.html.*#two": [
+      {
+        "doc": "Set 1 of 2",
+        "fields": [
+          {
+            "query": "[name='q']",
+            "value": "Testofill rocks!"
+          }
+        ],
+        "name": "Set Testofill rocks"
+      },
+      {
+        "fields": [
+          {
+            "query": "[name='q']",
+            "value": "Value from another ruleSet"
+          }
+        ],
+        "name": "Set Another"
       }
     ]
   }
 }
+```
 
 Installation
 ---------------
@@ -44,9 +66,9 @@ ChangeLog
 ----------------
 
 - 2014-01 v1.2 release
-    - JSON config using chrome.storage, move from jQuery to the smaller Sizzle,
-      event page inst.of background, manifestv v 2
-    - support multiple sets of values for the same form & selection from them
+  - JSON config using chrome.storage, move from jQuery to the smaller Sizzle,
+    event page inst.of background, manifestv v 2
+  - support multiple sets of values for the same form & selection from them
 - 2014-01 v1.1 release
   - browser action, work on frames
 - 2012-09-26 v1.0 release
@@ -60,11 +82,14 @@ Todo
 ----------------
 
 - FORM:
-    - find by label?
-    - (better) support for radio/check boxes
-- generated values (using predefined generators such as randomNumber, ability to add new generators, or a custom function)
-- add option for turning autocomplete on/off
-- ? make allFrames configurable
-- syntax highlight for the rules textarea using json; real-time validation?
-- handle error cases - no sets, no set selected, ...
-- save options on C-S / M-S
+  - find by label?
+  - (better) support for radio/check boxes
+- Config
+  - add option for turning autocomplete on/off
+  - syntax highlighting and on-the-fly validation of JSON
+  - app-specific validation of the config against schema
+  - save options on C-S / M-S
+  - ? make allFrames configurable
+- Random values
+  - generated values (using predefined generators such as randomNumber, ability to add new generators, or a custom function)
+- handle/test error cases - no sets, no set selected, ...

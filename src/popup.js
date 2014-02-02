@@ -23,7 +23,7 @@ function handleRuleSetSelected(evt, tab, ruleSets) {
   });
 }
 
-// TODO Do not copy, reuse from run.js
+/* Find defined ruleSets matching this URL */
 function findMatchingRules(currentUrl, ruleSetsCallback) {
   chrome.storage.sync.get('testofill.rules', function(items) {
     if (typeof chrome.runtime.lastError === "undefined") {

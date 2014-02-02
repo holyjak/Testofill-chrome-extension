@@ -24,24 +24,36 @@ function sendMessageToContentScript(tab, message) {
 }
 
 //---------------------------------------------------------------- listeners
+
+/* Set # ruleSets on icon when tab/url changes, set popup */
+function setBadgeAndIconAction(tabId, ruleSets) {
+  // When 1+ sets => show in the badge; tabId => shows only when this tab active
+  chrome.browserAction.setBadgeText({tabId: tabId, text: ruleSets.length.toString()}); // FIXME has no effect?!
+  chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color: '#04B4AE'});
+
+  // If 2+ rule sets => set popup (replaces the default browserAction.onCliked action set below)
+  if (ruleSets.length > 1) {
+    chrome.browserAction.setPopup({tabId: tabId, popup: 'popup.html'});
+  } else {
+    chrome.browserAction.setPopup({tabId: tabId, popup: ''}); // remove the popup, if any (needed????)
+  }
+}
+
+function triggerAutofillingIfEnabled(tab, ruleSets) {
+  // todo check if autofill enabled ...
+  sendMessageToContentScript(tab, ruleSets[0]); // TODO Defaulting to 1st ruleSet not so smart?
+}
+
 /*
- * Set # ruleSets on icon when tab/url changes, set popup.
+ * When new URL loaded: Set # ruleSets on icon when tab/url changes, set popup, trigger auto-fill.
  *
  * BEWARE: Seems not to be triggered for cached pages.
  */
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (changeInfo.url) {
     findMatchingRules(changeInfo.url, function(ruleSets){
-      // When 1+ sets => show in the badge; tabId => shows only when this tab active
-      chrome.browserAction.setBadgeText({tabId: tabId, text: ruleSets.length.toString()}); // FIXME has no effect?!
-      chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color: '#04B4AE'});
-
-      // If 2+ rule sets => set popup (replaces the default browserAction.onCliked action set below)
-      if (ruleSets.length > 1) {
-        chrome.browserAction.setPopup({tabId: tabId, popup: 'popup.html'});
-      } else {
-        chrome.browserAction.setPopup({tabId: tabId, popup: ''}); // remove the popup, if any (needed????)
-      }
+      setBadgeAndIconAction(tabId, ruleSets);
+      triggerAutofillingIfEnabled(tab, ruleSets);
     });
   }
   // Note: changeInfo.status loading/complete/undefined; url only while 'loading'

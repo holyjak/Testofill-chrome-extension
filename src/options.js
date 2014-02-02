@@ -8,7 +8,7 @@ function showStatus(message, type) {
     statusElm.innerHTML = '<span style="color:blue">' + message + '</span>';;
   }
 
-  // TODO fix this, does not work:
+  // TODO fix this timeout reset, does not work:
   setTimeout(function() {
     status.innerHTML = "";
   }, 750);
@@ -41,12 +41,11 @@ function save_options() {
 }
 
 function restore_options() {
-  // TODO Load from storage, insert into the textarea
   chrome.storage.sync.get('testofill.rules', function(items) {
     if (typeof chrome.runtime.lastError === "undefined") {
       var rules = items['testofill.rules'];
       console.log("Rules restored: ", rules);
-      if (typeof rules !== "undefined") { // TODO verify correct of no saved rules
+      if (typeof rules !== "undefined") { // TODO verify behaves OK if there are no saved rules
         var rulesElm = document.getElementById("rules");
         rulesElm.value = JSON.stringify(rules, null, "  ");
       }

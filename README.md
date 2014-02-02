@@ -51,14 +51,14 @@ ChangeLog
   - browser action, work on frames
 - 2012-09-26 v1.0 release
 
-FIXME
------
-- Single ruleset: button does not work, i.e. form not filled
+Shortcomings
+------------
+
+- URL is matched against the page URL, not iframe URL even if the form is in an iframe
 
 Todo
 ----------------
 
-- In on onUpdate tab event - find # sets, set their count in the badge, and either set browser action if 1 or set popup if 2+
 - FORM:
     - find by label?
     - (better) support for radio/check boxes
@@ -68,4 +68,3 @@ Todo
 - syntax highlight for the rules textarea using json; real-time validation?
 - handle error cases - no sets, no set selected, ...
 - save options on C-S / M-S
-- remove duplication between run and events.js

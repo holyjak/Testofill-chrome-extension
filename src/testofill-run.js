@@ -13,7 +13,7 @@ function fillForms(ruleSet) {
       unmatchedSelectors.push(field);
     } else {
       fieldElms.forEach(function(inputElm) {
-        inputElm.value = field.value;
+        fillField(inputElm, field);
       });
     }
   });
@@ -24,6 +24,21 @@ function fillForms(ruleSet) {
                 , unmatchedSelectors);
   }
 
+}
+
+/* Apply rule to a field to fill it (exec. for each matching field, e.g. radio). */
+function fillField(fieldElm, fieldRule) {
+  if (fieldElm.type === 'checkbox') {
+    fieldElm.checked = fieldRule.value;
+  } else if (fieldElm.type === 'select-one') { // TODO select multi too
+    console.log("WARN: selects not yet supported");
+  } else if (fieldElm.type === 'radio') {
+    fieldElm.checked = (fieldElm.value === fieldRule.value);
+    // find the one with matching value or unset all
+    console.log("WARN: radio not yet supported");
+  } else {
+    fieldElm.value = fieldRule.value;
+  }
 }
 
 // Listen for message from the popup with the selected ruleSet

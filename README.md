@@ -77,13 +77,14 @@ Shortcomings
 ------------
 
 - URL is matched against the page URL, not iframe URL even if the form is in an iframe
+- Currently only works for fields that have the value attribute, i.e. not for radio/checkbox/select
 
 Todo
 ----------------
 
 - FORM:
   - find by label?
-  - (better) support for radio/check boxes
+  - (better) support for radio/check boxes/select list
 - Config
   - add option for turning autocomplete on/off
   - syntax highlighting and on-the-fly validation of JSON

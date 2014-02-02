@@ -1,9 +1,42 @@
 <html>
     <head><title>Testofill test</title></head>
     <body>
-        A form:
+        <h3>Food preferences</h3>
         <form>
-            <input type="text" name="q" id="box">
+            <p>
+            <input type="text" name="q" id="box" placeholder="My favourite meal name" size="30">
+            </p><p>
+            Soup?<input type="CHECKBOX" name="chboxin" value="checkbox1"><em>(-&gt; checked)</em>
+            Poisonous?<input type="CHECKBOX" name="chboxin_poisonous" value="xy" checked><em>(-&gt; unchecked)</em>
+            </p><p>
+            Preferred: <input type="RADIO" name="radioin" value="radio1_on" checked>Brokkoli
+            <input type="RADIO" name="radioin" value="radio2_off">Tomatoes
+            <em>(-&gt; Tomatoes)</em>
+            </p><p>
+            Eat at: <input type="RADIO" name="radioin_none" value="1" checked>Park
+            <input type="RADIO" name="radioin_none" value="2">Home
+            <em>(De-select so that nothing selected)</em>
+            </p><p>
+            <label>Image: <input type="file" name="filein"><em>(unsupported?)</em></label>
+            <input type="hidden" name="hiddenin">
+            </p><p>
+            <input type="password" name="passwordin" placeholder="Random password">
+            </p><p>
+            Spiceness: <select name="selectin">
+                <option value="hot">Hot</option>
+                <option value="veryhot">Very hot</option>
+            </select><em>(-&gt; very hot)</em>
+            </p><p>
+            Use: <select name="selectin_none">
+                <option value="">Select one</option>
+                <option value="knife">Knife &amp; fork</option>
+                <option value="veryhot" selected>Hands</option>
+            </select><em>(De-select so that nothing selected)</em>
+            </p><p>
+            <em>TODO Multiselect</em>
+            </p><p>
+            <input type="submit" value="Submit" />
+            </p>
         </form>
     </body>
 </html>

@@ -1,7 +1,7 @@
 // ref. http://dev.screw-axis.com/doc/chrome_extensions/tutorials/getting_started/
 {
   "name": "Testofill, Form Filler for Testers",
-  "version": "0.1",
+  "version": "0.2",
   "manifest_version": 2,
   "author": "Jakub Holy <http://theholyjava.wordpress.com/>",
 
@@ -10,13 +10,14 @@
   "permissions": [
     "activeTab",
     "storage",
-    "tabs" // needed to access tab.url in onUpdated etc.
+    "tabs", // needed to access tab.url in onUpdated etc.
+    "contextMenus"
   ],
   "browser_action": {
     "default_title": "Testofill",
     "default_icon": {
       // Note: only 19 and 38 supported ,we have to lie for now
-      "19": "autofill_16x16.png" // by Designmodo ,https://www.iconfinder.com/icons/115700/
+      "19": "autofill_16x16.png" // by Designmodo, https://www.iconfinder.com/icons/115700/
     }
 	},
   "background": {
@@ -38,5 +39,8 @@
   "background": {
     "scripts": ["events.js"],
     "persistent": false
+  },
+  "icons": {
+    "16": "autofill_16x16.png" // by Designmodo, https://www.iconfinder.com/icons/115700/
   }
 }

@@ -39,14 +39,27 @@ function findMatchingRules(currentUrl, ruleSetsCallback) {
   });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    var tab = tabs[0];
-    findMatchingRules(tab.url, function(ruleSets) {
-      renderRuleSetSelection(ruleSets);
-      document.querySelector('#ruleSetList').addEventListener('change', function(evt){
-        handleRuleSetSelected(evt, tab, ruleSets);
-      });
+function renderForTab(tab) {
+  findMatchingRules(tab.url, function(ruleSets) {
+    renderRuleSetSelection(ruleSets);
+    document.querySelector('#ruleSetList').addEventListener('change', function(evt){
+      handleRuleSetSelected(evt, tab, ruleSets);
     });
   });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var tabIdFromUrl = window.location.hash.substring(1);
+  if (tabIdFromUrl) {
+    // Opened from ctx menu
+    chrome.tabs.get(parseInt(tabIdFromUrl), function(tab) {
+      renderForTab(tab);
+    });
+  } else {
+    // Opened from browserAction icon
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      var tab = tabs[0];
+      renderForTab(tab);
+    });
+  }
 });

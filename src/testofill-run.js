@@ -30,12 +30,26 @@ function fillForms(ruleSet) {
 function fillField(fieldElm, fieldRule) {
   if (fieldElm.type === 'checkbox') {
     fieldElm.checked = fieldRule.value;
-  } else if (fieldElm.type === 'select-one') { // TODO select multi too
-    console.log("WARN: selects not yet supported");
+  } else if (fieldElm.type === 'select-one') {
+    for(var i = fieldElm.length - 1; i >= 0; i--) {
+      var opt = fieldElm[i];
+      opt.selected = (opt.value === fieldRule.value);
+    };
+  } else if (fieldElm.type === 'select-multiple') {
+    if (!Array.isArray(fieldRule.value)) {
+      console.error("The form element is a select-multiple and thus the value " +
+        "to fill in should be an array of 0+ values but it is not an array; " +
+                    "query: " + fieldRule.query + ", the value: ", fieldRule.value,
+                    "; the field: ", fieldElm);
+      return;
+    }
+    for(var i = fieldElm.length - 1; i >= 0; i--) {
+      var opt = fieldElm[i];
+      opt.selected = (fieldRule.value.indexOf(opt.value) >= 0);
+    };
   } else if (fieldElm.type === 'radio') {
     fieldElm.checked = (fieldElm.value === fieldRule.value);
     // find the one with matching value or unset all
-    console.log("WARN: radio not yet supported");
   } else {
     fieldElm.value = fieldRule.value;
   }

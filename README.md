@@ -65,26 +65,38 @@ directory. (You can then also click "Pack extension...".)
 ChangeLog
 ----------------
 
-- 2014-01 v1.2 release
+- 2014-02 v0.2 pre-release
+  - Added context menu for windows w/o toolbar
+- 2014-02-03 v0.1 pre-release
   - JSON config using chrome.storage, move from jQuery to the smaller Sizzle,
     event page inst.of background, manifestv v 2
   - support multiple sets of values for the same form & selection from them
-- 2014-01 v1.1 release
-  - browser action, work on frames
-- 2012-09-26 v1.0 release
+  - the icon's badge shows the number of ruleSets matching the URL
+  - support radio, checkbox, select (single, multi)
+- 2014-01 v0.0 release
+  - Based on Autofill 1.0 (2012-09-26) + browser action, work on frames
 
 Shortcomings
 ------------
 
 - URL is matched against the page URL, not iframe URL even if the form is in an iframe
 - Currently only works for fields that have the value attribute, i.e. not for radio/checkbox/select
+- Some JavaScript-ctivated forms are not filled automatically and you need to click
+  the extension icon to fill them in
 
 Todo
 ----------------
 
+- Add debug option and debug statements
+- Docs: Add screenshots, more info
+- clear the 'Options saves' status after a while
+- Get it working with PrimeFaces
+- Currently the browserAction icon is reset when opening a cached URL - fix this
+
+- Make findMatchingRules  run also if no matches
+- Run setBadgeAndIconAction/autofill also when same url reloaded (diff evt?)
 - FORM:
   - find by label?
-  - (better) support for radio/check boxes/select list
 - Config
   - add option for turning autocomplete on/off
   - syntax highlighting and on-the-fly validation of JSON

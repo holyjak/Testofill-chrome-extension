@@ -31,13 +31,93 @@
                 <option value="">Select one</option>
                 <option value="knife">Knife &amp; fork</option>
                 <option value="veryhot" selected>Hands</option>
-            </select><em>(De-select so that nothing selected)</em>
+            </select><em>(-&gt; De-select so that nothing selected)</em>
             </p><p>
-            <em>TODO Multiselect</em>
+            Select 0+: <select name="selectmultiin" multiple="true" size="2">
+                <option value="lassi">Lassi</option>
+                <option value="raita">Raita</option>
+            </select><em>(-&gt; Select all)</em>
             </p><p>
+            <input type="reset" value="Reset" />
             <input type="submit" value="Submit" />
             </p>
         </form>
+
+        Rules for this form:
+        <code><pre>
+{
+  "forms": {
+    "me:1111/test.html.*#one": [
+      {
+        "fields": [
+          {
+            "query": "[name='q']",
+            "value": "Palak paneer"
+          },
+          {
+            "query": "[name='chboxin']",
+            "value": true
+          },
+          {
+            "query": "[name='chboxin_poisonous']",
+            "value": false
+          },
+          {
+            "query": "[name='radioin']",
+            "value": "radio2_off"
+          },
+          {
+            "query": "[name='radioin_none']",
+            "value": null
+          },
+          {
+            "query": "[name='hiddenin']",
+            "value": "Hidden message"
+          },
+          {
+            "query": "[name='passwordin']",
+            "value": "Secr3t!"
+          },
+          {
+            "query": "[name='selectin']",
+            "value": "veryhot"
+          },
+          {
+            "query": "[name='selectin_none']",
+            "value": null
+          },
+          {
+            "query": "[name='selectmultiin']",
+            "value": ["lassi", "raita"]
+          }
+        ],
+        "name": "Bob the Test Manager"
+      }
+    ],
+    "me:1111/test.html.*#two": [
+      {
+        "doc": "Register as the test manager Bob",
+        "fields": [
+          {
+            "query": "[name='q']",
+            "value": "Testofill rocks!"
+          }
+        ],
+        "name": "Bob the Test Manager"
+      },
+      {
+        "fields": [
+          {
+            "query": "[name='q']",
+            "value": "Value from another ruleSet"
+          }
+        ],
+        "name": "Another"
+      }
+    ]
+  }
+}
+        </pre></code>
     </body>
 </html>
 

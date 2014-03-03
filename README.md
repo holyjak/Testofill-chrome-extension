@@ -6,7 +6,7 @@ It is possible to define and choose from multiple sets of values for a given for
 
 State: Automatic/on-demand form filling with predefined values; no value generation or multiple sets yet.
 
-Fields are found using CSS3 selectors (via [Sizzle]()). The configuration of the plugin is a JavaScript object.
+Fields are found using CSS3 selectors (via [Sizzle](https://github.com/jquery/sizzle/wiki/Sizzle-Documentation#wiki-selectors)). The configuration of the plugin is a JavaScript object.
 Forms are filled either automatically or when you click the plugin icon.
 
 Based on [work by Akkunchoi](http://akkunchoi.github.io/Autofill-chrome-extension).

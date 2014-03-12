@@ -58,9 +58,11 @@ Example of configuration
 Installation
 ---------------
 
-Open the Extensions page in Chrome, check "Developer mode"
+First, clone/download this repository.
+
+Next, open the Extensions page in Chrome, check "Developer mode"
 and click "Load unpacked extension...", navigate to the `src``
-directory. (You can then also click "Pack extension...".)
+directory of this repo. (You can then also click "Pack extension...".)
 
 ChangeLog
 ----------------

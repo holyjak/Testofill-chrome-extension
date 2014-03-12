@@ -50,6 +50,8 @@ function fillField(fieldElm, fieldRule) {
   } else if (fieldElm.type === 'radio') {
     fieldElm.checked = (fieldElm.value === fieldRule.value);
     // find the one with matching value or unset all
+  } else if (fieldRule.textContent) {
+    fieldElm.textContent = fieldRule.textContent; // labels, text elements
   } else {
     fieldElm.value = fieldRule.value;
   }

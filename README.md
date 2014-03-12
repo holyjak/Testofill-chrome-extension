@@ -65,8 +65,9 @@ directory. (You can then also click "Pack extension...".)
 ChangeLog
 ----------------
 
-- 2014-02 v0.2 pre-release
+- 2014-02+03 v0.2 pre-release
   - Added context menu for windows w/o toolbar
+  - Support for setting `textContent`
 - 2014-02-03 v0.1 pre-release
   - JSON config using chrome.storage, move from jQuery to the smaller Sizzle,
     event page inst.of background, manifestv v 2

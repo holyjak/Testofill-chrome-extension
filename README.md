@@ -64,6 +64,10 @@ Next, open the Extensions page in Chrome, check "Developer mode"
 and click "Load unpacked extension...", navigate to the `src``
 directory of this repo. (You can then also click "Pack extension...".)
 
+You also likely want to check "Allow in incognito mode" for the extension if you use incognito windows for testing.
+
+After the installation, open the extension's options and modify at will.
+
 ChangeLog
 ----------------
 

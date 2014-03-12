@@ -38,7 +38,7 @@ function ctxMenuHandler(info, tab) {
   findMatchingRules(tab.url, function(ruleSets){
     if (ruleSets.length == 0) {
       // this handler currently not called if no rulesets
-      chrome.windows.create({ url: 'no-rulesets.html', type: 'popup', width: 300, height: 200});
+      chrome.windows.create({ url: 'no-rulesets.html?url=' + encodeURI(tab.url), type: 'popup', width: 400, height: 250});
     } else if (ruleSets.length == 1) {
       // Apply directly
       sendMessageToContentScript(tab, ruleSets[0]);
@@ -78,7 +78,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     // Default badge/popup if no matching rulesets
     chrome.browserAction.setBadgeText({tabId: tabId, text: 'N/A'});
     chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color: '#808080'});
-    chrome.browserAction.setPopup({tabId: tabId, popup: 'no-rulesets.html'});
+    chrome.browserAction.setPopup({tabId: tabId, popup: 'no-rulesets.html?url=' + encodeURI(changeInfo.url)});
 
     findMatchingRules(changeInfo.url, function(ruleSets){
       setBadgeAndIconAction(tabId, ruleSets);

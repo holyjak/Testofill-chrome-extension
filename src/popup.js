@@ -1,4 +1,20 @@
-// Render the select of available rule sets
+/** Entry point for initializing the matching ruleSets select for the given tab */
+function renderForTab(tab) {
+  findMatchingRules(tab.url, function(ruleSets) {
+    renderRuleSetSelection(ruleSets);
+    document.querySelector('#ruleSetList').addEventListener('change', function(evt){
+      handleRuleSetSelected(evt, tab, ruleSets);
+    });
+  });
+}
+
+/* Find defined ruleSets matching this URL */
+function findMatchingRules(currentUrl, ruleSetsCallback) {
+  chrome.runtime.getBackgroundPage(function(eventsWin){
+    eventsWin.findMatchingRules(currentUrl, ruleSetsCallback);
+  });
+}
+/** Fill in the rule set <select> with the given ruleSets */
 function renderRuleSetSelection(ruleSets) {
   var ruleSetList = document.getElementById("ruleSetList");
   ruleSetList.size = ruleSets.length;
@@ -9,7 +25,7 @@ function renderRuleSetSelection(ruleSets) {
   });
 }
 
-// Get the selected ruleSet, send message to the content script to apply it
+/** Get the selected ruleSet, send message to the content script to apply it */
 function handleRuleSetSelected(evt, tab, ruleSets) {
   event.preventDefault();
   var select = evt.target;
@@ -23,31 +39,7 @@ function handleRuleSetSelected(evt, tab, ruleSets) {
   });
 }
 
-/* Find defined ruleSets matching this URL */
-function findMatchingRules(currentUrl, ruleSetsCallback) {
-  chrome.storage.sync.get('testofill.rules', function(items) {
-    if (typeof chrome.runtime.lastError === "undefined") {
-      var rules = items['testofill.rules'];
-      for (var urlRE in rules.forms) {
-        if (currentUrl.match(new RegExp(urlRE))) {
-          ruleSetsCallback(rules.forms[urlRE]);
-        }
-      }
-    } else {
-      console.log("ERROR Run.js: Rules loading failed", chrome.runtime.lastError);
-    }
-  });
-}
-
-function renderForTab(tab) {
-  findMatchingRules(tab.url, function(ruleSets) {
-    renderRuleSetSelection(ruleSets);
-    document.querySelector('#ruleSetList').addEventListener('change', function(evt){
-      handleRuleSetSelected(evt, tab, ruleSets);
-    });
-  });
-}
-
+// Trigger renderForTab when loaded
 document.addEventListener('DOMContentLoaded', function() {
   var tabIdFromUrl = window.location.hash.substring(1);
   if (tabIdFromUrl) {

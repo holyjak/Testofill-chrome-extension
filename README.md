@@ -113,3 +113,13 @@ Todo
 - Random values
   - generated values (using predefined generators such as randomNumber, ability to add new generators, or a custom function)
 - handle/test error cases - no sets, no set selected, ...
+
+Development
+-----------
+
+Form filling is implemented in the content script
+[`testofill-run.js`](https://github.com/jakubholynet/Testofill-chrome-extension/blob/master/src/testofill-run.js). See especially `fillForms` that finds fields matched by rules in a rule set and fills them via `fillField`, which applies a rule (its value, textContent etc.) to a field.
+
+[`events.js`](https://github.com/jakubholynet/Testofill-chrome-extension/blob/master/src/events.js) contains the crucial `findMatchingRules`, which roles rule sets from options, finds those matching the current URL, and calls the provided callback for them. Behavior of the context menu and badge icon are defined here as well.
+
+[`popup.js`](https://github.com/jakubholynet/Testofill-chrome-extension/blob/master/src/popup.js) defines the selection popup that opens when multiple rule sets match the current URL and that triggers form filling when one is selected.

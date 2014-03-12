@@ -1,16 +1,24 @@
 //---------------------------------------------------------------- ruleSets & content
 /* Get the rules and try to apply them to this page, if matched */
-function findMatchingRules(currentUrl, ruleSetsCallback) {
+function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {
   chrome.storage.sync.get('testofill.rules', function(items) {
-    if (typeof chrome.runtime.lastError === "undefined") {
-      var rules = items['testofill.rules'];
-      for (var urlRE in rules.forms) {
-        if (currentUrl.match(new RegExp(urlRE))) {
-          ruleSetsCallback(rules.forms[urlRE]);
-        }
-      }
-    } else {
+    if (typeof chrome.runtime.lastError !== "undefined") {
       console.log("ERROR Run.js: Rules loading failed", chrome.runtime.lastError);
+      return;
+    }
+
+    var rules = items['testofill.rules'];
+    var matchFound = false;
+
+    for (var urlRE in rules.forms) {
+      if (currentUrl.match(new RegExp(urlRE))) {
+        matchFound = true;
+        ruleSetsCallback(rules.forms[urlRE]);
+      }
+    }
+
+    if (callIfNone && !matchFound) {
+      ruleSetsCallback([]);
     }
   });
 }
@@ -26,9 +34,6 @@ function sendMessageToContentScript(tab, message) {
 //---------------------------------------------------------------- listeners
 
 function ctxMenuHandler(info, tab) {
-  // The default popup if no matching rules:
-  chrome.windows.create({ url: 'no-rulesets.html', type: 'popup', width: 300, height: 200});
-
   // TODO use frame url if defined
   findMatchingRules(tab.url, function(ruleSets){
     if (ruleSets.length == 0) {
@@ -41,7 +46,7 @@ function ctxMenuHandler(info, tab) {
       // Show popup // TODO does not work; also, open rather popup not full window
       chrome.windows.create({ url: 'popup.html#' + tab.id, type: 'popup', width: 350, height: 200});
     }
-  });
+  }, true);
 }
 
 /* Set # ruleSets on icon when tab/url changes, set popup */

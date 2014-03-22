@@ -3,9 +3,11 @@
 function showStatus(message, type) {
   var statusElm = document.getElementById("status");
   if (type === "error") {
-    statusElm.innerHTML = '<span style="color:red">ERROR: ' + message + '</span>';
-  } else {
-    statusElm.innerHTML = '<span style="color:blue">' + message + '</span>';;
+    statusElm.innerHTML = ' <span style="color:red">ERROR: ' + message + '</span>';
+  } else if (type === "info") {
+    statusElm.innerHTML = ' <span style="color:cadetblue">' + message + '</span>';;
+  }else {
+    statusElm.innerHTML = ' <span style="color:blue">' + message + '</span>';;
   }
 
   // TODO fix this timeout reset, does not work:
@@ -60,6 +62,7 @@ function restore_options(editor) {
       } else {
         editor.set(exampleJson);
       }
+      editor.expandAll();
 
     } else {
       showError("Restoring the rules failed: " + chrome.runtime.lastError);
@@ -69,11 +72,20 @@ function restore_options(editor) {
 }
 
 function init() {
-  var editor = new jsoneditor.JSONEditor(document.getElementById("jsoneditor"));
+  var container = document.getElementById("jsoneditor");
+  var options = {
+    change: function() { showStatus("Configuration changed, don't forget to save it", "info"); },
+    mode: 'tree',
+    modes: [/*'code', 'form',*/ 'tree', 'text'], // allowed modes
+    error: function (err) {
+      alert(err.toString());
+    }
+  };
+  var editor = new jsoneditor.JSONEditor(container, options);
 
   restore_options(editor);
 
-  document.querySelector('#save').addEventListener('click', function() { save_options(editor); });
+  document.querySelector('.save').addEventListener('click', function() { save_options(editor); });
 
 }
 

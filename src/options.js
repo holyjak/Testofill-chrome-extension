@@ -29,26 +29,38 @@ function saveToStorage(json) {
   })
 }
 
-function save_options() {
-  var rulesElm = document.getElementById("rules");
-  try {
-    var rules = JSON.parse(rulesElm.value);
-    saveToStorage(rules);
-  } catch (e) {
-    showError("The rules are not a valid JSON object: " + e);
-    console.error("Rules parsing error: ", e, rulesElm.value);
-  }
+function save_options(editor) {
+  var rules = editor.get();
+  saveToStorage(rules);
 }
 
-function restore_options() {
+function restore_options(editor) {
+
+  var exampleJson = {
+    "forms": {
+      "seznam.cz": [
+        {
+          "name": "Bob the Test Manager",
+          "doc": "Register as the test manager Bob",
+          "fields": [
+            {"query": "[name='q']", "value": "Testofill rocks!"}
+          ]
+        }
+      ]
+    }
+  };
+
   chrome.storage.sync.get('testofill.rules', function(items) {
     if (typeof chrome.runtime.lastError === "undefined") {
       var rules = items['testofill.rules'];
       console.log("Rules restored: ", rules);
+
       if (typeof rules !== "undefined") { // TODO verify behaves OK if there are no saved rules
-        var rulesElm = document.getElementById("rules");
-        rulesElm.value = JSON.stringify(rules, null, "  ");
+        editor.set(rules);
+      } else {
+        editor.set(exampleJson);
       }
+
     } else {
       showError("Restoring the rules failed: " + chrome.runtime.lastError);
       console.log("ERROR restoring rules", chrome.runtime.lastError);
@@ -56,5 +68,13 @@ function restore_options() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', restore_options);
-document.querySelector('#save').addEventListener('click', save_options);
+function init() {
+  var editor = new jsoneditor.JSONEditor(document.getElementById("jsoneditor"));
+
+  restore_options(editor);
+
+  document.querySelector('#save').addEventListener('click', function() { save_options(editor); });
+
+}
+
+document.addEventListener('DOMContentLoaded', init);

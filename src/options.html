@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <title>Testofill options</title>
+      <link rel="stylesheet" type="text/css" href="lib/jsoneditor-min.css">
+      <script src="lib/jsoneditor-min.js"></script>
   </head>
 <body id="options-page">
   <h1>Testofill options</h1>
@@ -11,21 +13,8 @@
     Beware: Escape special RegExp characters such as . and ? with \.
     </p>
     <div>
-        <textarea id="rules" cols="100" rows="30" style="display:block">
-        {
-          "forms": {
-            "seznam.cz": [
-              {
-                "name": "Bob the Test Manager",
-                "doc": "Register as the test manager Bob",
-                "fields": [
-                  {"query": "[name='q']", "value": "Testofill rocks!"}
-                ]
-              }
-            ]
-          }
-        }
-        </textarea>
+        <div id="jsoneditor" style="width: 600px; height: 800px;"></div>
+
         <div id="status" style="font-style:italic">&nbsp;</div>
         <button id="save">Save</button>
     </div>

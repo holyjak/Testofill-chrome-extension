@@ -34,7 +34,7 @@ function handleRuleSetSelected(evt, tab, ruleSets) {
   var ruleSet = ruleSets[ruleSetIdx];
 
   chrome.runtime.getBackgroundPage(function(bp){
-    bp.sendMessageToContentScript(tab, ruleSet);
+    bp.sendMessageToContentScript(tab, "fill_form", ruleSet);
     window.close();
   });
 }

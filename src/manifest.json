@@ -1,7 +1,7 @@
 // ref. http://dev.screw-axis.com/doc/chrome_extensions/tutorials/getting_started/
 {
   "name": "Testofill, Form Filler for Testers",
-  "version": "0.3",
+  "version": "0.4",
   "manifest_version": 2,
   "author": "Jakub Holy <http://theholyjava.wordpress.com/>",
 
@@ -30,7 +30,7 @@
         "http://*/*",
         "https://*/*"
       ],
-      "js": ["lib/sizzle-20140125.min.js", "testofill-run.js"],
+      "js": ["lib/sizzle-20140125.min.js", "lib/underscore-min.js", "testofill-run.js"],
       "run_at": "document_idle", // or document_start, document_end, document_idle
       "all_frames": true
     }

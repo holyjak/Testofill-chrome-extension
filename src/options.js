@@ -23,7 +23,7 @@ function showError(message) {
   showStatus(message, "error");
 }
 
-function saveToStorage(json) {
+function saveToStorage(json) { // see also events.js: mergeIntoOptions()
   chrome.storage.sync.set({'testofill.rules': json}, function() {
     if (typeof chrome.runtime.lastError === "undefined") {
       showStatus("Options Saved.");
@@ -31,7 +31,7 @@ function saveToStorage(json) {
       showError("saving failed: " + chrome.runtime.lastError);
       console.log("ERROR saving rules", chrome.runtime.lastError);
     }
-  })
+  });
 }
 
 function save_options(editor) {

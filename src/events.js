@@ -23,31 +23,79 @@ function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {
   });
 }
 
-function sendMessageToContentScript(tab, message) {
+function sendMessageToContentScript(tab, messageId, payload, responseCallback ) {
     chrome.tabs.executeScript(tab.id, {file: "lib/sizzle-20140125.min.js"}, function() {
-      chrome.tabs.executeScript(tab.id, {file: "testofill-run.js"}, function() {
-        chrome.tabs.sendMessage(tab.id, message);
+      chrome.tabs.executeScript(tab.id, {file: "lib/underscore-min.js"}, function() {
+        chrome.tabs.executeScript(tab.id, {file: "testofill-run.js"}, function() {
+          chrome.tabs.sendMessage(tab.id, {id: messageId, payload: payload}, responseCallback);
+        });
       });
     });
 }
 
 //---------------------------------------------------------------- listeners
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ listeners:menu
+
 function ctxMenuHandler(info, tab) {
+  if (info.menuItemId === "fill_form") {
+    ctxMenuFillFormHandler(tab);
+  } else { // save_form
+    ctxMenuSaveFormHandler(tab);
+  }
+}
+
+function ctxMenuFillFormHandler(tab) {
   // TODO use frame url if defined
   findMatchingRules(tab.url, function(ruleSets){
-    if (ruleSets.length == 0) {
+    if (ruleSets.length === 0) {
       // this handler currently not called if no rulesets
       chrome.windows.create({ url: 'no-rulesets.html?url=' + encodeURI(tab.url), type: 'popup', width: 400, height: 250});
     } else if (ruleSets.length == 1) {
       // Apply directly
-      sendMessageToContentScript(tab, ruleSets[0]);
+      sendMessageToContentScript(tab, "fill_form", ruleSets[0]);
     } else {
       // Show popup // TODO does not work; also, open rather popup not full window
       chrome.windows.create({ url: 'popup.html#' + tab.id, type: 'popup', width: 350, height: 200});
     }
   }, true);
 }
+
+function ctxMenuSaveFormHandler(tab) {
+  sendMessageToContentScript(tab, "save_form", {}, function(formListJson) {
+    mergeIntoOptions(tab.url, formListJson);
+  });
+}
+
+/** Merge the given map with the options.forms map. */
+function mergeIntoOptions(url, formListJson) {
+  chrome.storage.sync.get('testofill.rules', function(items) {
+    if (typeof chrome.runtime.lastError !== "undefined") {
+      return; // TODO report error; how?
+    }
+
+    var rules = items['testofill.rules'];
+
+    // data sanitization
+    if (typeof rules === "undefined") {
+      rules = {"forms": {}};
+    } else if (typeof (rules["forms"]) === "undefined") {
+      rules["forms"] = {};
+    }
+    if (typeof (rules["forms"][url]) === "undefined") {
+      rules["forms"][url] = [];
+    }
+
+    // data merging
+    var existingUrlForms = rules["forms"][url];
+    rules["forms"][url] = existingUrlForms.concat(formListJson);
+
+    chrome.storage.sync.set({'testofill.rules': rules});
+
+  });
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ listeners:other
 
 /* Set # ruleSets on icon when tab/url changes, set popup */
 function setBadgeAndIconAction(tabId, ruleSets) {
@@ -65,9 +113,10 @@ function setBadgeAndIconAction(tabId, ruleSets) {
 
 function triggerAutofillingIfEnabled(tab, ruleSets) {
   // todo check if autofill enabled ...
-  sendMessageToContentScript(tab, ruleSets[0]); // TODO Defaulting to 1st ruleSet not so smart?
+  sendMessageToContentScript(tab, "fill_form", ruleSets[0]); // TODO Defaulting to 1st ruleSet not so smart?
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ listeners:installationOf
 /*
  * When new URL loaded: Set # ruleSets on icon when tab/url changes, set popup, trigger auto-fill.
  *
@@ -94,7 +143,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 /* Only triggered if there is 0-1 ruleSets (i.e. of there is no popup win). */
 chrome.browserAction.onClicked.addListener(function(tab){
   findMatchingRules(tab.url, function(ruleSets){
-    sendMessageToContentScript(tab, ruleSets[0]);
+    sendMessageToContentScript(tab, "fill_form", ruleSets[0]);
   });
 });
 
@@ -104,5 +153,8 @@ chrome.contextMenus.onClicked.addListener(ctxMenuHandler);
 chrome.runtime.onInstalled.addListener(function() {
  chrome.contextMenus.create({"title": "Testofill this!",
                              "contexts":["page", "frame"],
-                             "id": "1"});
+                             "id": "fill_form"});
+ chrome.contextMenus.create({"title": "Save form(s)",
+                             "contexts":["page", "frame"],
+                             "id": "save_form"});
 });

@@ -2,13 +2,16 @@
 
 function showStatus(message, type) {
   var statusElm = document.getElementById("status");
+
+  var color = "blue";
   if (type === "error") {
-    statusElm.innerHTML = ' <span style="color:red">ERROR: ' + message + '</span>';
+    message = 'ERROR: ' + message;
+    color = "red";
   } else if (type === "info") {
-    statusElm.innerHTML = ' <span style="color:cadetblue">' + message + '</span>';;
-  }else {
-    statusElm.innerHTML = ' <span style="color:blue">' + message + '</span>';;
+    color = "cadetblue";
   }
+
+  statusElm.innerHTML = '<span style="color:' + color + '" class="status-msg">' + message + '</span>';
 
   // TODO fix this timeout reset, does not work:
   setTimeout(function() {
@@ -76,9 +79,9 @@ function init() {
   var options = {
     change: function() { showStatus("Configuration changed, don't forget to save it", "info"); },
     mode: 'tree',
-    modes: [/*'code', 'form',*/ 'tree', 'text'], // allowed modes
+    modes: ['tree', 'code'], // allowed modes
     error: function (err) {
-      alert(err.toString());
+      console.log("JSONEditor error:", err);
     }
   };
   var editor = new jsoneditor.JSONEditor(container, options);
@@ -86,6 +89,10 @@ function init() {
   restore_options(editor);
 
   document.querySelector('.save').addEventListener('click', function() { save_options(editor); });
+  document.querySelector('.reset').addEventListener('click', function() {
+    restore_options(editor);
+    showStatus("Configuration reset to the saved one", "info");
+  });
 
 }
 

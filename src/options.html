@@ -3,8 +3,43 @@
   <head>
     <meta charset="UTF-8">
     <title>Testofill options</title>
-      <link rel="stylesheet" type="text/css" href="lib/jsoneditor-min.css">
-      <script src="lib/jsoneditor-min.js"></script>
+
+      <!-- jsoneditor -->
+      <link rel="stylesheet" type="text/css" href="lib/jsoneditor/jsoneditor-min.css">
+      <script src="lib/jsoneditor/jsoneditor-min.js"></script>
+
+      <!-- ace code editor -->
+      <script type="text/javascript" src="lib/jsoneditor/lib/ace/ace.js"></script>
+      <script type="text/javascript" src="lib/jsoneditor/lib/ace/mode-json.js"></script>
+      <script type="text/javascript" src="lib/jsoneditor/lib/ace/theme-textmate.js"></script>
+      <script type="text/javascript" src="lib/jsoneditor/lib/ace/theme-jsoneditor.js"></script>
+
+      <!-- json lint -->
+      <script type="text/javascript" src="lib/jsoneditor/lib/jsonlint/jsonlint.js"></script>
+
+      <style type="text/css">
+          body {
+              background-color: lightyellow;
+          }
+          #status {
+              font-style: italic;
+              background-color: white;
+          }
+          .save {
+              background-color: greenyellow;
+          }
+          .reset {
+              background-color: orangered;
+              color: white;
+          }
+          .cmd-panel {
+              background-color: #D5DDF6;
+          }
+          .status-msg {
+              padding: 5px;
+          }
+      </style>
+
   </head>
 <body id="options-page">
   <h1>Testofill options</h1>
@@ -12,11 +47,16 @@
     <p>
     Beware: Escape special RegExp characters such as . and ? with \.
     </p>
-    <div>
-        <button class="save">Save</button><span id="status" style="font-style:italic">&nbsp;</span>
-        <div id="jsoneditor" style="width: 600px; height: 800px;"></div>
-        <button class="save">Save</button>
-        <span style="font-style:italic;font-size:small;margin-left:400px">Powered by <a href="https://github.com/josdejong/jsoneditor">jsoneditor</a></span>
+    <div style="width: 600px;">
+        <div class="cmd-panel">
+            <button class="save">Save</button><span id="status"></span>
+        </div>
+        <div id="jsoneditor" style="height: 800px;"></div>
+        <div class="cmd-panel">
+            <button class="save">Save</button>
+            &nbsp;<button class="reset">Reset</button>
+            <span style="font-style:italic;font-size:small;margin-left:350px">Powered by <a href="https://github.com/josdejong/jsoneditor">jsoneditor</a></span>
+        </div>
     </div>
 
 </body>

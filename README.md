@@ -12,6 +12,17 @@ Forms are filled either automatically or when you click the plugin icon.
 
 Based on [work by Akkunchoi](http://akkunchoi.github.io/Autofill-chrome-extension).
 
+Description from Chrome Web Shop
+--------------------------------
+
+Testofill allows you to define one or more sets of rules for filling forms on a particular page and to fill them in automatically or on demand. It targets people that can write little CSS (such as "[name='myfield']") and that need to be able to choose from a sets of values to fill in. A typical example is a tester that needs to repeatedly fill in different search criteria to test her app and thus wants to define rule sets such as "Simple book search" and "Advanced book search".
+
+It is also possible to create rules automatically from a filled form and adjust them later.
+
+More info at the project page (https://github.com/jakubholynet/Testofill-chrome-extension/).
+
+Icon by Designmodo (https://www.iconfinder.com/icons/115700/edit_pen_pencil_write_icon).
+
 Screenshots
 -----------
 

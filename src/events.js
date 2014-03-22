@@ -24,7 +24,7 @@ function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {
 }
 
 function sendMessageToContentScript(tab, message) {
-    chrome.tabs.executeScript(tab.id, {file: "sizzle-20140125.min.js"}, function() {
+    chrome.tabs.executeScript(tab.id, {file: "lib/sizzle-20140125.min.js"}, function() {
       chrome.tabs.executeScript(tab.id, {file: "testofill-run.js"}, function() {
         chrome.tabs.sendMessage(tab.id, message);
       });

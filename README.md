@@ -71,6 +71,8 @@ After the installation, open the extension's options and modify at will.
 ChangeLog
 ----------------
 
+- 2014-3 v0.3 pre-release
+  - Added jsoneditor for better json editting
 - 2014-02+03 v0.2 pre-release
   - Added context menu for windows w/o toolbar
   - Support for setting `textContent`

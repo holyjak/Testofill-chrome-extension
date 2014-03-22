@@ -1,21 +1,60 @@
-Testofill, the Form Filler for Testers Chrome Extension
-=======================================================
+![icon](src/autofill_16x16.png) Testofill, the Form Filler for Testers Chrome Extension
+=======================================================================================
 
 Goal: Enable testers to fill forms automatically/on-demand with predefined and/or generated values.
 It is possible to define and choose from multiple sets of values for a given form.
 
-State: Automatic/on-demand form filling with predefined values; no value generation or multiple sets yet.
+State: Automatic/on-demand form filling with predefined values; possible to save values from a form.
+No random input data generation yet (or soon).
 
-Fields are found using CSS3 selectors (via [Sizzle](https://github.com/jquery/sizzle/wiki/Sizzle-Documentation#wiki-selectors)). The configuration of the plugin is a JavaScript object.
+Fields are found using CSS3 selectors (via [Sizzle](https://github.com/jquery/sizzle/wiki/Sizzle-Documentation#wiki-selectors)). The configuration of the plugin is a JSON object.
 Forms are filled either automatically or when you click the plugin icon.
 
 Based on [work by Akkunchoi](http://akkunchoi.github.io/Autofill-chrome-extension).
 
+Screenshots
+-----------
 
-Example of configuration
-------------------------
+1) Testofill has found one rule set for the current page:
+
+![One match found](docs/TestofillOneMatch.jpg)
+
+2) Testofill configuration for that one match (also shows what the icon looks like when
+there are no rule sets matching the current page):
+
+![Testofill options](docs/TestofillOptions.jpg)
+
+3) Icon and popup when testofill has found multiple matches for the current page:
+
+![Testofill options](docs/TestofillMultipleMatches.jpg)
+
+4) Sometimes Testofill gets confused and you need to close and reopen the page if you
+want testofill to fill in forms on the page (notice there is neither a number nor "N/A" on the icon):
+
+![Confused](docs/Confused.jpg)
+
+5) Context menu (when clicking on a page outside of input elements, links, and media):
+
+![Context menu](docs/TestofillContextMenu.jpg)
+
+Configuration
+-------------
 
 (Extensions - Testofill - Options)
+
+The easiest thing is perhaps to go to a webpage with a form (forms), fill it in, right-click somewhere
+on the page (outside of links and other special objects) and select "Save form(s)" from the
+Testofill context menu.
+
+You can also write the configuration manually - it is a simple JSON object where each page has its
+URL mapped to a list of "rule sets" defined for it, each one consisting of a name and field rules.
+Field rules is a list of simple objects having a Sizzle query for locating the input element and
+the value to fill in.
+
+The editor provides a graphical tree view and raw JSON with syntax highlighting and validation.
+
+### Example configuration
+
 ```json
 {
   "forms": {
@@ -58,6 +97,8 @@ Example of configuration
 Installation
 ---------------
 
+If this plugin is not on the Chrome Web Store yet, you can install it manually.
+
 First, clone/download this repository.
 
 Next, open the Extensions page in Chrome, check "Developer mode"
@@ -91,27 +132,20 @@ Shortcomings
 ------------
 
 - URL is matched against the page URL, not iframe URL even if the form is in an iframe
-- Currently only works for fields that have the value attribute, i.e. not for radio/checkbox/select
-- Some JavaScript-ctivated forms are not filled automatically and you need to click
+- Some JavaScript-activated forms are not filled automatically and you need to click
   the extension icon to fill them in
 
 Todo
 ----------------
 
 - Add debug option and debug statements
-- Docs: Add screenshots, more info
-- clear the 'Options saves' status after a while
-- Get it working with PrimeFaces
+- Docs: Improve
 - Currently the browserAction icon is reset when opening a cached URL - fix this
-
-- Make findMatchingRules  run also if no matches
 - Run setBadgeAndIconAction/autofill also when same url reloaded (diff evt?)
 - FORM:
   - find by label?
 - Config
   - add option for turning autocomplete on/off
-  - syntax highlighting and on-the-fly validation of JSON
-  - app-specific validation of the config against schema
   - save options on C-S / M-S
   - ? make allFrames configurable
 - Random values

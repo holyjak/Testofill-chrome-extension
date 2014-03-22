@@ -97,7 +97,8 @@ The editor provides a graphical tree view and raw JSON with syntax highlighting 
 Installation
 ---------------
 
-If this plugin is not on the Chrome Web Store yet, you can install it manually.
+Either [install Testofill from Chrome Web Store](https://chrome.google.com/webstore/detail/testofill-form-filler-for/pkgdgajoinhkfldibdaledjikboognnl?hl=en-US)
+or follow the manual installation instructions below.
 
 First, clone/download this repository.
 

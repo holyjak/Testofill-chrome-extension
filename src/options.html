@@ -21,10 +21,21 @@
           body {
               background-color: lightyellow;
           }
+          #editor-col {
+              width: 60%;
+              float: left;
+          }
           #status {
               font-style: italic;
               background-color: white;
               margin-left: 10px;
+          }
+          #jsoneditor {
+              height: 800px;
+          }
+          #help {
+              width: 35%;
+              float: right;
           }
           .save {
               background-color: greenyellow;
@@ -57,15 +68,66 @@
     <p>
         (Beware: Escape special RegExp characters such as . and ? with \.)
     </p>
-    <div style="width: 600px;">
+
+    <div id="editor-col">
         <div class="cmd-panel">
             <button class="save">Save</button><span id="status"></span>
         </div>
-        <div id="jsoneditor" style="height: 800px;"></div>
+
+        <div id="jsoneditor"></div>
+
         <div class="cmd-panel">
             <button class="reset">Reset</button>
             <span style="font-style:italic;font-size:small;margin-left:350px">Powered by <a href="https://github.com/josdejong/jsoneditor">jsoneditor</a></span>
         </div>
+    </div>
+
+
+    <div id="help">
+        <h4>Help</h4>
+        <p>
+            The <code>forms</code> map maps URL of pages to an array of "rule sets".
+            The URL is actually a <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions">
+            regular expression</a> and Testofill uses it to check whether the current URL contains is.
+        </p>
+        <p>
+            So f.ex. <code>/myapp/a_page.html</code> will match <code>http://example.com/myapp/a_page.html</code>
+            (notice we're cheating here, we should actually have used '\\.html')
+        </p><p>
+        Each ruleset has an optional <code>name</code> and <code>doc</code>, displayed if multiple rule sets
+        match a page, and <code>fields</code>, which is an array of objects like
+        <code>{"query": "&lt;Sizzle query&gt;", "value": &lt;some value&gt;}</code>.
+        </p>
+
+        <h5>Queries</h5>
+        <code>query</code> is used to find the element to fill in, it is a
+        <a target="_blank" href="https://github.com/jquery/sizzle/wiki/Sizzle-Documentation#wiki-selectors">Sizzle selector</a>
+        (extended <a target="_blank" href="http://www.w3.org/TR/css3-selectors/#selectors">CSS3 selectors</a>).
+        You will mostly use <code>"[name='nameOfAnInputelement']"</code> and
+        <code>"[id='anId']"</code> or perhaps their variations such as <code>^='val'</code> (starts with val),
+        <code>$='val'</code> (ends with), <code>*='val'</code> (contains).
+
+        <h5>Values</h5>
+        The following values can be used depending on the element type:
+        <ul>
+            <li><strong>checkbox</strong> - true|false to check/uncheck it</li>
+            <li><strong>radio</strong> - string value of the radio element to check or null</li>
+            <li><strong>select-one</strong> - string value of the option to select or null</li>
+            <li><strong>select-multiple</strong> - an (possibly empty) array of values of the options to select or null</li>
+            <li><strong>other (text, textarea, ..)</strong> - the string value to set; works for any element with <code>value</code></li>
+        </ul>
+        <p>
+            <code>null</code> means select none / uncheck all.
+        </p>
+        <h5>Non-values</h5>
+        <p>
+            You can also sometimes specify other attributes than <code>value</code> in a rule:
+            <ul>
+                <li><strong>textContent</strong> - string value - sets the <code>textContent</code>
+                    of the element (f.ex. a label)
+                </li>
+        </ul>
+    </p>
     </div>
 
 </body>

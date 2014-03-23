@@ -37,16 +37,17 @@ function fillField(fieldElm, fieldRule) {
       opt.selected = (opt.value === fieldRule.value);
     }
   } else if (fieldElm.type === 'select-multiple') {
-    if (!Array.isArray(fieldRule.value)) {
+    var value = (fieldRule.value === null)? [] : fieldRule.value;
+    if (!Array.isArray(value)) {
       console.error("The form element is a select-multiple and thus the value " +
         "to fill in should be an array of 0+ values but it is not an array; " +
-                    "query: " + fieldRule.query + ", the value: ", fieldRule.value,
+                    "query: " + fieldRule.query + ", the value: ", value,
                     "; the field: ", fieldElm);
       return;
     }
     for(var j = fieldElm.length - 1; j >= 0; j--) {
       var multiOpt = fieldElm[j];
-      multiOpt.selected = (fieldRule.value.indexOf(multiOpt.value) >= 0);
+      multiOpt.selected = (value.indexOf(multiOpt.value) >= 0);
     }
   } else if (fieldElm.type === 'radio') {
     fieldElm.checked = (fieldElm.value === fieldRule.value);

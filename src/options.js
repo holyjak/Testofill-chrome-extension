@@ -43,10 +43,10 @@ function restore_options(editor) {
 
   var exampleJson = {
     "forms": {
-      "seznam.cz": [
+      "duckduckgo.com": [
         {
-          "name": "Bob the Test Manager",
-          "doc": "Register as the test manager Bob",
+          "name": "(optional) Search for testofill",
+          "doc": "(optional) a longer description of this rule set ..",
           "fields": [
             {"query": "[name='q']", "value": "Testofill rocks!"}
           ]

@@ -17,6 +17,8 @@ Description from Chrome Web Shop
 
 Testofill allows you to define one or more sets of rules for filling forms on a particular page and to fill them in automatically or on demand. It targets people that can write little CSS (such as "[name='myfield']") and that need to be able to choose from a sets of values to fill in. A typical example is a tester that needs to repeatedly fill in different search criteria to test her app and thus wants to define rule sets such as "Simple book search" and "Advanced book search".
 
+The main advantages are being able to have multiple sets of values for a single form and having full access to and control over these values.
+
 It is also possible to create rules automatically from a filled form and adjust them later.
 
 More info at the project page (https://github.com/jakubholynet/Testofill-chrome-extension/).

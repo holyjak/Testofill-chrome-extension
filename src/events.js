@@ -180,10 +180,10 @@ chrome.contextMenus.onClicked.addListener(ctxMenuHandler);
 // Set up context menu tree at install time.
 chrome.runtime.onInstalled.addListener(function() {
  chrome.contextMenus.create({"title": "Testofill this!",
-                             "contexts":["page", "frame"],
+                             "contexts":["page", "frame", "editable"],
                              "id": "fill_form"});
  chrome.contextMenus.create({"title": "Save form(s)",
-                             "contexts":["page", "frame"],
+                             "contexts":["page", "frame", "editable"],
                              "id": "save_form"});
 });
 

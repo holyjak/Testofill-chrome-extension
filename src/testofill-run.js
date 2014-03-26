@@ -82,8 +82,6 @@ function makeTestofillJsonFromPageForms() {
       return {"name": formName, "fields": jsonFields};
     });
 
-  alert("Input from " + formListJson.length + " forms is going to be saved for " + document.location.toString());
-
   return formListJson;
 }
 
@@ -119,11 +117,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponseFn){
   var fromExtension = !sender.tab;
   if (!fromExtension) return;
 
+  var payload = message.payload;
+
   if (message.id === "fill_form") {
-    var ruleSet = message.payload;
+    var ruleSet = payload;
     fillForms(ruleSet);
   } else if (message.id === "save_form") {
     sendResponseFn(makeTestofillJsonFromPageForms());
+  } else if (message.id === "extracted_forms_saved") {
+    alert("Input from " + payload.count + " forms has been saved for " + payload.url);
+  } else if (message.id === "extracted_forms_save_failed") {
+    alert("FAILED to save " + payload.count + " forms extracted from " + payload.url + " due to " + payload.error);
   } else {
     console.log("ERROR: Unsupported message id received: " + message.id, message);
   }

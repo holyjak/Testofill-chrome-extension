@@ -10,10 +10,12 @@ function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {
     var rules = items['testofill.rules'];
     var matchFound = false;
 
-    for (var urlRE in rules.forms) {
-      if (currentUrl.match(new RegExp(urlRE))) {
-        matchFound = true;
-        ruleSetsCallback(rules.forms[urlRE]);
+    if (typeof rules !== 'undefined' && typeof rules.forms !== 'undefined') {
+      for (var urlRE in rules.forms) {
+        if (currentUrl.match(new RegExp(urlRE))) {
+          matchFound = true;
+          ruleSetsCallback(rules.forms[urlRE]);
+        }
       }
     }
 
@@ -63,16 +65,17 @@ function ctxMenuFillFormHandler(tab) {
 
 function ctxMenuSaveFormHandler(tab) {
   sendMessageToContentScript(tab, "save_form", {}, function(formListJson) {
-    mergeIntoOptions(tab.url, formListJson);
+    mergeIntoOptions(tab, formListJson);
   });
 }
 
 /** Merge the given map with the options.forms map. */
-function mergeIntoOptions(url, formListJson) {
+function mergeIntoOptions(tab, formListJson) {
   chrome.storage.sync.get('testofill.rules', function(items) {
     if (typeof chrome.runtime.lastError !== "undefined") {
       return; // TODO report error; how?
     }
+    var url = tab.url;
 
     var rules = items['testofill.rules'];
 
@@ -90,7 +93,19 @@ function mergeIntoOptions(url, formListJson) {
     var existingUrlForms = rules["forms"][url];
     rules["forms"][url] = existingUrlForms.concat(formListJson);
 
-    chrome.storage.sync.set({'testofill.rules': rules});
+    chrome.storage.sync.set({'testofill.rules': rules}, function() {
+      if (typeof chrome.runtime.lastError !== "undefined") {
+        // F.ex. due to {message: "QUOTA_BYTES_PER_ITEM quota exceeded"} // 4kB
+        var error = chrome.runtime.lastError.message;
+        console.log("FAILED to store rules due to %s (trying to save %d B); rules: ",
+                    error,
+                    JSON.stringify(rules).length + 'testofill.rules'.length,
+                    rules);
+        sendMessageToContentScript(tab, 'extracted_forms_save_failed', {url: url, count: formListJson.length, error: error});
+      } else {
+        sendMessageToContentScript(tab, 'extracted_forms_saved', {url: url, count: formListJson.length});
+      }
+    });
 
   });
 }
@@ -157,4 +172,18 @@ chrome.runtime.onInstalled.addListener(function() {
  chrome.contextMenus.create({"title": "Save form(s)",
                              "contexts":["page", "frame"],
                              "id": "save_form"});
+});
+
+/**
+ * Notify of data stored into the storage
+ * @param changes {map} key -> {oldValue> .., newValue: ..}
+ * @param namespace {string} e.g. 'sync'
+ */
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+  for (key in changes) {
+    if (key !== 'testofill.rules') return;
+
+    // TODO Notify Options page to reload?
+
+  }
 });

@@ -125,9 +125,31 @@ You also likely want to check "Allow in incognito mode" for the extension if you
 
 After the installation, open the extension's options and modify at will.
 
+Tips and tricks
+---------------
+
+### Using Testofill with Primefaces
+
+Primefaces use a combination of a hidden select (`<id>_input`) and a text label (`<id>_label`) to draw a custom select element. If you only set the select it will work but you will not see the value filled in so you should also
+manually set the label, using the `textContent` attribute. Ex.:
+
+```json
+{
+  "query": "[id$=':preferedDrinkSelect_input']",
+  "value": "Lassi"
+},
+{
+  "query": "[id$=':preferedDrinkSelect_label']",
+  "textContent": "Lassi"
+}
+```
+
 ChangeLog
 ----------------
 
+- 2014-3 v0.5 release
+  - save form ignores empty/unchecked/irrelevant fields
+  - better reporting of options storage success/failure
 - 2014-3 v0.4 pre-release
   - Added context menu to save form(s) on the current page
 - 2014-3 v0.3 pre-release

@@ -66,17 +66,25 @@ function fillField(fieldElm, fieldRule) {
  * return an array of {name: .., fields: [..]} that can be merged into the existing config.
  */
 function makeTestofillJsonFromPageForms() {
+  var excludedTypes = ['button', 'submit', 'reset', 'form', 'hidden'];
   var formListJson =
     _.map(document.forms, function(form){
       var formName = "TODO Name this " + form.id;
       var fieldElms = Sizzle(":input", form); // Find inputs and  textareas, selects, and buttons:
       var jsonFields = _.chain(fieldElms)
-          .filter(function(f) {return f.name !== "" && f.type !== "button";})
+          .filter(function(f) {
+            return f.name !== "" &&
+              f.value !== '' &&
+              excludedTypes.indexOf(f.type) === -1 &&
+              !f.disabled &&
+              !f.readonly;
+          })
           .groupBy('name') // group f.ex. radios into one array
           .map(_.values) // turn {'fieldName': [field1, field2,...]} into just the array of fields
           .map(function(inputGrp) {
             return {"query": makeQueryFrom(inputGrp[0]), "value": makeValueFrom(inputGrp)};
           })
+          .filter(function(rule) {return rule.value !== false;}) // Filter out checkboxes not selected, ...
           .value();
 
       return {"name": formName, "fields": jsonFields};

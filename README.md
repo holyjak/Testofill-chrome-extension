@@ -21,6 +21,8 @@ The main advantages are being able to have multiple sets of values for a single 
 
 It is also possible to create rules automatically from a filled form and adjust them later.
 
+Tip: You likely want to enable the extension in Incognito mode on the Extensions page to be able to use it when Incognito.
+
 More info at the project page (https://github.com/jakubholynet/Testofill-chrome-extension/).
 
 Icon by Designmodo (https://www.iconfinder.com/icons/115700/edit_pen_pencil_write_icon).

@@ -1,4 +1,4 @@
-//---------------------------------------------------------------- ruleSets & content
+//---------------------------------------------------------------- reusable: ruleSets, content, storage
 /* Get the rules and try to apply them to this page, if matched */
 function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {
   chrome.storage.sync.get('testofill.rules', function(items) {
@@ -35,6 +35,25 @@ function sendMessageToContentScript(tab, messageId, payload, responseCallback ) 
     });
 }
 
+/**
+ * @param rules {object} the full rules JSON object to save
+ * @param rules {fn} function to all; params: error {optional} - error message upon failure
+ */
+function saveRulesToStorage(rules, responseCallback) {
+    chrome.storage.sync.set({'testofill.rules': rules}, function() {
+      if (typeof chrome.runtime.lastError === "undefined") {
+        responseCallback();
+      } else {
+        // F.ex. due to {message: "QUOTA_BYTES_PER_ITEM quota exceeded"} // 4kB
+        var error = chrome.runtime.lastError.message + " when trying to save " +
+             JSON.stringify(rules).length + 'testofill.rules'.length + " B";
+        console.log("FAILED to store rules due to %s; rules: ",
+                    error,
+                    rules);
+        responseCallback(error);
+      }
+    });
+}
 //---------------------------------------------------------------- listeners
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ listeners:menu
@@ -93,17 +112,11 @@ function mergeIntoOptions(tab, formListJson) {
     var existingUrlForms = rules["forms"][url];
     rules["forms"][url] = existingUrlForms.concat(formListJson);
 
-    chrome.storage.sync.set({'testofill.rules': rules}, function() {
-      if (typeof chrome.runtime.lastError !== "undefined") {
-        // F.ex. due to {message: "QUOTA_BYTES_PER_ITEM quota exceeded"} // 4kB
-        var error = chrome.runtime.lastError.message;
-        console.log("FAILED to store rules due to %s (trying to save %d B); rules: ",
-                    error,
-                    JSON.stringify(rules).length + 'testofill.rules'.length,
-                    rules);
-        sendMessageToContentScript(tab, 'extracted_forms_save_failed', {url: url, count: formListJson.length, error: error});
-      } else {
+    saveRulesToStorage(rules, function(error) {
+      if (typeof error === 'undefined') {
         sendMessageToContentScript(tab, 'extracted_forms_saved', {url: url, count: formListJson.length});
+      } else {
+        sendMessageToContentScript(tab, 'extracted_forms_save_failed', {url: url, count: formListJson.length, error: error});
       }
     });
 

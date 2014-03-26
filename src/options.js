@@ -24,13 +24,14 @@ function showError(message) {
 }
 
 function saveToStorage(json) { // see also events.js: mergeIntoOptions()
-  chrome.storage.sync.set({'testofill.rules': json}, function() {
-    if (typeof chrome.runtime.lastError === "undefined") {
-      showStatus("Options Saved.");
-    } else {
-      showError("saving failed: " + chrome.runtime.lastError);
-      console.log("ERROR saving rules", chrome.runtime.lastError);
-    }
+  chrome.runtime.getBackgroundPage(function(eventsWin){
+    eventsWin.saveRulesToStorage(json, function(error) {
+      if (typeof error === 'undefined') {
+        showStatus("Options Saved.");
+      } else {
+        showError("Saving failed: " + error);
+      }
+    });
   });
 }
 
@@ -46,7 +47,7 @@ function restore_options(editor) {
       "duckduckgo.com": [
         {
           "name": "(optional) Search for testofill",
-          "doc": "(optional) a longer description of this rule set ..",
+          "doc": "(optional) This is an example rule set; it is not saved so click [Save] if you want to use it",
           "fields": [
             {"query": "[name='q']", "value": "Testofill rocks!"}
           ]
@@ -64,6 +65,7 @@ function restore_options(editor) {
         editor.set(rules);
       } else {
         editor.set(exampleJson);
+        showStatus("This is only an example, not really saved - save it if you want", "info");
       }
       editor.expandAll();
 

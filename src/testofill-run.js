@@ -90,7 +90,9 @@ function makeTestofillJsonFromPageForms() {
       return {"name": formName, "fields": jsonFields};
     });
 
-  return formListJson;
+  return formListJson.filter(function(f) {
+    return f.fields.length > 0;
+  });
 }
 
 function makeQueryFrom(input) {

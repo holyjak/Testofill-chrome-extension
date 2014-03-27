@@ -147,6 +147,8 @@ manually set the label, using the `textContent` attribute. Ex.:
 ChangeLog
 ----------------
 
+- 2014-3 v0.5.1 release
+  - do not save forms with no non-empty fields
 - 2014-3 v0.5 release
   - save form ignores empty/unchecked/irrelevant fields
   - better reporting of options storage success/failure

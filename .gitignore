@@ -1,1 +1,4 @@
 .DS_Store
+node_modules/
+src/extension-libs.js
+src/testofill-content.js

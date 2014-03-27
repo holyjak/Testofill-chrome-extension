@@ -26,12 +26,8 @@ function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {
 }
 
 function sendMessageToContentScript(tab, messageId, payload, responseCallback ) {
-    chrome.tabs.executeScript(tab.id, {file: "lib/sizzle-20140125.min.js"}, function() {
-      chrome.tabs.executeScript(tab.id, {file: "lib/underscore-min.js"}, function() {
-        chrome.tabs.executeScript(tab.id, {file: "testofill-run.js"}, function() {
-          chrome.tabs.sendMessage(tab.id, {id: messageId, payload: payload}, responseCallback);
-        });
-      });
+    chrome.tabs.executeScript(tab.id, {file: "generated/testofill-content-packed.js"}, function() {
+      chrome.tabs.sendMessage(tab.id, {id: messageId, payload: payload}, responseCallback);
     });
 }
 

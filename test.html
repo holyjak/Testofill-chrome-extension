@@ -1,8 +1,8 @@
 <html>
     <head>
         <title>Testofill test</title>
-        <!--script src="http://underscorejs.org/underscore-min.js"></script>
-        <script src="src/lib/sizzle-20140125.min.js"></script-->
+        <script src="chance.min.js"></script>
+        <script src="src/lib/underscore-min.js"></script>
     </head>
     <body>
         <h3>Food preferences</h3>
@@ -122,6 +122,107 @@
   }
 }
         </pre></code>
+
+        <script>
+
+            var generateFns = {
+                "chance.natural": [chance.natural, chance],
+                "chance.integer": [chance.integer, chance],
+                "chance.bool": [chance.bool, chance],
+                "chance.character": [chance.character, chance],
+                "chance.pick": [chance.pick, chance]
+            };
+
+            function parseGenExpr(expr) {
+
+                // Is this a fn call?
+                var maybeFn = isFnCall(expr);
+                if (maybeFn) {
+                    var name = expr[0];
+                    expr.shift();
+                    return parseGenFn(maybeFn, expr);
+                }
+
+                // Other, non-fn call
+                return parseGenVal(expr);
+
+            }
+
+            function isFnCall(expr) {
+                if (_.isArray(expr) && !_.isEmpty(expr) && _.isString(expr[0])) {
+                    var maybeName = expr[0];
+                    var maybeFn = generateFns[maybeName];
+                    if (maybeFn) {
+                        return maybeFn;
+                    }
+                }
+                return false;
+            }
+
+            /**
+             * Note: Nested arrays parsed too; literal array not parsed: {array: [...]}
+             */
+            function parseGenFn(fn, args) {
+
+                var argsParsed = _.chain(args)
+                    .map(function(e){
+                        // nested fn call?
+                        if (_.isArray(e)) return parseGenExpr(e); // array but not fn call
+                        // literal array?
+                        //if (_.isObject(e) && _.has(e, 'array') && _.keys(e).length === 1 ) return e.array;
+                        // parsed nested (1 level only)
+                        if (_.isObject(e)){
+                            return _.chain(e).pairs().map(function(nameVal){
+                                var val = nameVal[1];
+                                var maybeFn = isFnCall(val);
+                                if (maybeFn) {
+                                    val.shift();
+                                    val = parseGenFn(maybeFn, val);
+                                }
+                                return [nameVal[0], nameVal[1]];
+                            })
+                            .object().value();
+                        }
+                        return e;
+                    })
+                    .value();
+
+                return fn[0].apply(fn[1], argsParsed);
+            }
+
+            /** Parse non-fn call: literal array or literal value */
+            function parseGenVal(expr) {
+                return _.chain(expr)
+                    .map(function(e){
+                        if (_.isString(e)) return e;
+                        if (_.isArray(e)) return parseGenExpr(e); // array but not fn call
+                        throw {expr: expr, e: e, msg: "Cannot parse, only supports string/array here, got " + (typeof e)};
+                    })
+                    .reduce(function(acc,str){return acc.concat(str);}, "")
+                    .value();
+            }
+
+            // EX:
+            var generate = ["+47", ["chance.natural", {"min": 10000000,"max":99999999}]];
+            // OK mixed: ["+47", ["chance.natural", {"min": 10000000,"max":99999999}]];
+            // OK top fn call ["chance.integer"]
+            // OK ["1"], ["1","2"]
+            // OK ["chance.natural", {"min": ["chance.natural"]}] - 1 lvl nesting only!!!
+            // NOT ["chance.pick", [1,2,3]] - not strings
+            // NOT ["chance.pick", [true,false]] - not strings
+            // NOT SUPPORTED:
+            // - non-strings, e.g. [1]
+
+
+            // =>
+            // var fn = generateFns['chance.natural']
+            // fn[0].apply(fn[1], {"min": 10000000,"max":99999999})
+
+            console.log("Parsed: ", parseGenExpr(generate));
+
+
+
+        </script>
     </body>
 </html>
 

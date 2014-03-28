@@ -1,7 +1,7 @@
 //---------------------------------------------------------------- reusable: ruleSets, content, storage
 /* Get the rules and try to apply them to this page, if matched */
 function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {
-  chrome.storage.sync.get('testofill.rules', function(items) {
+  chrome.storage.local.get('testofill.rules', function(items) {
     if (typeof chrome.runtime.lastError !== "undefined") {
       console.log("ERROR Run.js: Rules loading failed", chrome.runtime.lastError);
       return;
@@ -36,7 +36,7 @@ function sendMessageToContentScript(tab, messageId, payload, responseCallback ) 
  * @param rules {fn} function to all; params: error {optional} - error message upon failure
  */
 function saveRulesToStorage(rules, responseCallback) {
-    chrome.storage.sync.set({'testofill.rules': rules}, function() {
+    chrome.storage.local.set({'testofill.rules': rules}, function() {
       if (typeof chrome.runtime.lastError === "undefined") {
         responseCallback();
       } else {
@@ -86,7 +86,7 @@ function ctxMenuSaveFormHandler(tab) {
 
 /** Merge the given map with the options.forms map. */
 function mergeIntoOptions(tab, formListJson) {
-  chrome.storage.sync.get('testofill.rules', function(items) {
+  chrome.storage.local.get('testofill.rules', function(items) {
     if (typeof chrome.runtime.lastError !== "undefined") {
       return; // TODO report error; how?
     }

@@ -56,7 +56,7 @@ function restore_options(editor) {
     }
   };
 
-  chrome.storage.sync.get('testofill.rules', function(items) {
+  chrome.storage.local.get('testofill.rules', function(items) {
     if (typeof chrome.runtime.lastError === "undefined") {
       var rules = items['testofill.rules'];
       console.log("Rules restored: ", rules);

@@ -147,6 +147,9 @@ manually set the label, using the `textContent` attribute. Ex.:
 ChangeLog
 ----------------
 
+- 2014-3 v0.6
+  - build with grunt, 1 file with deps for content
+  - use local instead of sync storage - 5MB inst. of 4kb
 - 2014-3 v0.5.1 release
   - do not save forms with no non-empty fields
 - 2014-3 v0.5 release

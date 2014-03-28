@@ -1,11 +1,12 @@
 {
   "name": "Testofill, Form Filler for Testers",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "manifest_version": 2,
   "author": "Jakub Holy <http://theholyjava.wordpress.com/>",
-
+  "icons": {
+    "16": "autofill_16x16.png"
+  },
   "description": "Enable testers to fill forms automatically/on-demand based on (sets of) rules they wrote / captured.",
-  "icons": {},
   "permissions": [
     "activeTab",
     "storage",
@@ -37,8 +38,5 @@
   "background": {
     "scripts": ["events.js"],
     "persistent": false
-  },
-  "icons": {
-    "16": "autofill_16x16.png"
   }
 }

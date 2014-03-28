@@ -29,6 +29,12 @@ function fillForms(ruleSet) {
 
 /* Apply rule to a field to fill it (exec. for each matching field, e.g. radio). */
 function fillField(fieldElm, fieldRule) {
+  if (!_.isUndefined(fieldRule.generate)) {
+    var tmp = fieldRule.generate ;
+    fieldRule.value = parseTopGenExpr(fieldRule.generate);
+    console.log("Gen random for field %s => %s, gen: %s", fieldRule.query, fieldRule.value, JSON.stringify(fieldRule.generate), fieldRule, tmp);
+  }
+
   if (fieldElm.type === 'checkbox') {
     fieldElm.checked = fieldRule.value;
   } else if (fieldElm.type === 'select-one') {

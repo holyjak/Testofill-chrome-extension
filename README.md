@@ -147,6 +147,9 @@ manually set the label, using the `textContent` attribute. Ex.:
 ChangeLog
 ----------------
 
+- 2014-3 v0.7
+  - experimental support for generating random values via Chance.js
+  - added some simple mocha tests, jshint (failing so far)
 - 2014-3 v0.6
   - build with grunt, 1 file with deps for content
   - use local instead of sync storage - 5MB inst. of 4kb

@@ -126,9 +126,23 @@
                 <li><strong>textContent</strong> - string value - sets the <code>textContent</code>
                     of the element (f.ex. a label)
                 </li>
+                <li><strong>generate</strong> - expression defining what random value to generate. It is
+                    an array: <code>[valueOrFnCall, ...]</code> where value is a primitive value, an object,
+                    or an array and fnCall is <code>["$fnName", argument1, ...]</code>.
+                    Ex.:
+                    <pre>
+ ["$bool"]
+ ["+", ["$pick", 46, 47], ["$natural", {"min": 10000000,"max":99999999}]]
+ ["$string", {length: [["$pick", 1, 7, 13]]}]
+
+                    </pre>
+                </li>
         </ul>
     </p>
     </div>
+
+    <hr>
+    <em>Pwered by Ace, Chance.js, Jsoneditor, Sizzle, Underscore</em>
 
 </body>
 

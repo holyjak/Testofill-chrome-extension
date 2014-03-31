@@ -69,80 +69,92 @@
         (Beware: Escape special RegExp characters such as . and ? with \.)
     </p>
 
-    <div id="editor-col">
-        <div class="cmd-panel">
-            <button class="save">Save</button><span id="status"></span>
+    <section>
+        <div id="editor-col">
+            <div class="cmd-panel">
+                <button class="save">Save</button><span id="status"></span>
+            </div>
+
+            <div id="jsoneditor"></div>
+
+            <div class="cmd-panel">
+                <button class="reset">Reset</button>
+                <span style="font-style:italic;font-size:small;margin-left:350px">Powered by <a href="https://github.com/josdejong/jsoneditor">jsoneditor</a></span>
+            </div>
         </div>
 
-        <div id="jsoneditor"></div>
 
-        <div class="cmd-panel">
-            <button class="reset">Reset</button>
-            <span style="font-style:italic;font-size:small;margin-left:350px">Powered by <a href="https://github.com/josdejong/jsoneditor">jsoneditor</a></span>
-        </div>
-    </div>
+        <div id="help">
+            <h4>Help</h4>
+            <p>
+                The <code>forms</code> map maps URL of pages to an array of "rule sets".
+                The URL is actually a <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions">
+                regular expression</a> and Testofill uses it to check whether the current URL contains is.
+            </p>
+            <p>
+                So f.ex. <code>/myapp/a_page.html</code> will match <code>http://example.com/myapp/a_page.html</code>
+                (notice we're cheating here, we should actually have used '\\.html')
+            </p><p>
+            Each ruleset has an optional <code>name</code> and <code>doc</code>, displayed if multiple rule sets
+            match a page, and <code>fields</code>, which is an array of objects like
+            <code>{"query": "&lt;Sizzle query&gt;", "value": &lt;some value&gt;}</code>.
+            </p>
 
+            <h5>Queries</h5>
+            <code>query</code> is used to find the element to fill in, it is a
+            <a target="_blank" href="https://github.com/jquery/sizzle/wiki/Sizzle-Documentation#wiki-selectors">Sizzle selector</a>
+            (extended <a target="_blank" href="http://www.w3.org/TR/css3-selectors/#selectors">CSS3 selectors</a>).
+            You will mostly use <code>"[name='nameOfAnInputelement']"</code> and
+            <code>"[id='anId']"</code> or perhaps their variations such as <code>^='val'</code> (starts with val),
+            <code>$='val'</code> (ends with), <code>*='val'</code> (contains).
 
-    <div id="help">
-        <h4>Help</h4>
-        <p>
-            The <code>forms</code> map maps URL of pages to an array of "rule sets".
-            The URL is actually a <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions">
-            regular expression</a> and Testofill uses it to check whether the current URL contains is.
-        </p>
-        <p>
-            So f.ex. <code>/myapp/a_page.html</code> will match <code>http://example.com/myapp/a_page.html</code>
-            (notice we're cheating here, we should actually have used '\\.html')
-        </p><p>
-        Each ruleset has an optional <code>name</code> and <code>doc</code>, displayed if multiple rule sets
-        match a page, and <code>fields</code>, which is an array of objects like
-        <code>{"query": "&lt;Sizzle query&gt;", "value": &lt;some value&gt;}</code>.
-        </p>
-
-        <h5>Queries</h5>
-        <code>query</code> is used to find the element to fill in, it is a
-        <a target="_blank" href="https://github.com/jquery/sizzle/wiki/Sizzle-Documentation#wiki-selectors">Sizzle selector</a>
-        (extended <a target="_blank" href="http://www.w3.org/TR/css3-selectors/#selectors">CSS3 selectors</a>).
-        You will mostly use <code>"[name='nameOfAnInputelement']"</code> and
-        <code>"[id='anId']"</code> or perhaps their variations such as <code>^='val'</code> (starts with val),
-        <code>$='val'</code> (ends with), <code>*='val'</code> (contains).
-
-        <h5>Values</h5>
-        The following values can be used depending on the element type:
-        <ul>
-            <li><strong>checkbox</strong> - true|false to check/uncheck it</li>
-            <li><strong>radio</strong> - string value of the radio element to check or null</li>
-            <li><strong>select-one</strong> - string value of the option to select or null</li>
-            <li><strong>select-multiple</strong> - an (possibly empty) array of values of the options to select or null</li>
-            <li><strong>other (text, textarea, ..)</strong> - the string value to set; works for any element with <code>value</code></li>
-        </ul>
-        <p>
-            <code>null</code> means select none / uncheck all.
-        </p>
-        <h5>Non-values</h5>
-        <p>
-            You can also sometimes specify other attributes than <code>value</code> in a rule:
+            <h5>Values</h5>
+            The following values can be used depending on the element type:
             <ul>
-                <li><strong>textContent</strong> - string value - sets the <code>textContent</code>
-                    of the element (f.ex. a label)
-                </li>
-                <li><strong>generate</strong> - expression defining what random value to generate. It is
-                    an array: <code>[valueOrFnCall, ...]</code> where value is a primitive value, an object,
-                    or an array and fnCall is <code>["$fnName", argument1, ...]</code>.
-                    Ex.:
-                    <pre>
- ["$bool"]
- ["+", ["$pick", 46, 47], ["$natural", {"min": 10000000,"max":99999999}]]
- ["$string", {length: [["$pick", 1, 7, 13]]}]
+                <li><strong>checkbox</strong> - true|false to check/uncheck it</li>
+                <li><strong>radio</strong> - string value of the radio element to check or null</li>
+                <li><strong>select-one</strong> - string value of the option to select or null</li>
+                <li><strong>select-multiple</strong> - an (possibly empty) array of values of the options to select or null</li>
+                <li><strong>other (text, textarea, ..)</strong> - the string value to set; works for any element with <code>value</code></li>
+            </ul>
+            <p>
+                <code>null</code> means select none / uncheck all.
+            </p>
+            <h5>Non-values</h5>
+            <p>
+                You can also sometimes specify other attributes than <code>value</code> in a rule:
+                <ul>
+                    <li><strong>textContent</strong> - string value - sets the <code>textContent</code>
+                        of the element (f.ex. a label)
+                    </li>
+                    <li><strong>generate</strong> - expression defining what random value to generate. It is
+                        an array: <code>[valueOrFnCall, ...]</code> where value is a primitive value, an object,
+                        or an array and fnCall is <code>["$fnName", argument1, ...]</code>
+                        (primarily a <a href="http://chancejs.com/#basics">Chance.js function</a>).
+                        Ex.:
+                        <pre>
+["$bool"]         // true or false
+["+",             // f.ex. +4712345678
+    ["$pick", 46, 47],
+    ["$natural", {"min": 10000000,"max":99999999}]]
+["$string",      // string of 1, 7, or 13 chars
+    {"length": [["$pick", 1, 7, 13]]}]</pre>
+                        (An array is concatenated to a string.)
+                    </li>
+            </ul>
+        </p>
+        </div>
+    </section>
 
-                    </pre>
-                </li>
-        </ul>
-    </p>
-    </div>
-
+    <div style="clear:both"></div>
     <hr>
-    <em>Pwered by Ace, Chance.js, Jsoneditor, Sizzle, Underscore</em>
+    <p><em>Powered by <a href="http://chancejs.com/">Chance.js</a>,
+            <a href="http://sizzlejs.com/">Sizzle</a>,
+            <a href="http://underscorejs.org/">Underscore.js</a>,
+            and <a href="https://github.com/josdejong/jsoneditor/">JSON Editor<a/> with
+            <a href="http://ace.c9.io/">Ace editor</a> and <a href="https://github.com/zaach/jsonlint">JSON Lint</a>
+        </em>
+        </p>
 
 </body>
 

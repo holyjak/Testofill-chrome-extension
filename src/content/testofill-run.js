@@ -73,32 +73,53 @@ function fillField(fieldElm, fieldRule) {
  */
 function makeTestofillJsonFromPageForms() {
   var excludedTypes = ['button', 'submit', 'reset', 'form', 'hidden'];
+  var debugStrs = [];
+
   var formListJson =
     _.map(document.forms, function(form){
       var formName = "TODO Name this " + form.id;
       var fieldElms = Sizzle(":input", form); // Find inputs and  textareas, selects, and buttons:
-      var jsonFields = _.chain(fieldElms)
-          .filter(function(f) {
+
+      var fieldElmsOnlyRelevant = _.filter(fieldElms, function(f) {
             return f.name !== "" &&
               f.value !== '' &&
               excludedTypes.indexOf(f.type) === -1 &&
               !f.disabled &&
               !f.readonly;
-          })
+          });
+
+      var jsonFieldsAll = _.chain(fieldElmsOnlyRelevant)
           .groupBy('name') // group f.ex. radios into one array
           .map(_.values) // turn {'fieldName': [field1, field2,...]} into just the array of fields
           .map(function(inputGrp) {
             return {"query": makeQueryFrom(inputGrp[0]), "value": makeValueFrom(inputGrp)};
           })
-          .filter(function(rule) {return rule.value !== false;}) // Filter out checkboxes not selected, ...
           .value();
 
-      return {"name": formName, "fields": jsonFields};
+      // Filter out checkboxes not selected, ...
+      var jsonFieldsOnlySet = _.filter(jsonFieldsAll, function(rule) {return rule.value !== false;});
+
+      debugStrs.push("Form " + form.id + ": out of " +
+        fieldElms.length + " fields, " +
+        (fieldElms.length - fieldElmsOnlyRelevant.length) +
+        " were irrelevant (no name or value / disabled / type such as hidden) and " +
+        (jsonFieldsAll.length - jsonFieldsOnlySet.length) + " were exluded due to having value of false");
+
+      return {"name": formName, "fields": jsonFieldsOnlySet};
     });
 
-  return formListJson.filter(function(f) {
+  var formsNonempty = formListJson.filter(function(f) {
     return f.fields.length > 0;
   });
+
+  if (formsNonempty.length < formListJson.length) {
+    debugStrs.push("Also, " + (formListJson.length - formsNonempty.length) +
+      " forms were skipped for they had no relevant fields");
+  }
+
+  console.log("Report for Save forms at %s: ", document.location.toString(), debugStrs);
+
+  return formsNonempty;
 }
 
 function makeQueryFrom(input) {
@@ -141,7 +162,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponseFn){
   } else if (message.id === "save_form") {
     sendResponseFn(makeTestofillJsonFromPageForms());
   } else if (message.id === "extracted_forms_saved") {
-    alert("Input from " + payload.count + " forms has been saved for " + payload.url);
+    alert("Input from " + payload.count + " forms has been saved for " + payload.url + "\n(See console log for details)");
   } else if (message.id === "extracted_forms_save_failed") {
     alert("FAILED to save " + payload.count + " forms extracted from " + payload.url + " due to " + payload.error);
   } else {

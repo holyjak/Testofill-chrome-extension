@@ -17,7 +17,7 @@ var chanceFns = _.chain(chance)
 
 var generativeFns = {
   'concat': [function() {return _.reduce(arguments, function(acc,str){return acc.concat(str);}, "");}, null],
-  'identity': [function(v) {return v}, null]
+  'identity': [function(v) {return v;}, null]
 };
 
 var generateFns = _.extend({}, chanceFns, generativeFns);

@@ -23,11 +23,11 @@ module.exports = function(grunt) {
     concat: {
        content: {
           src: ['lib/shared/*.js','lib/content/*.js','src/content/*.js'],
-	        dest: 'src/extension/generated/testofill-content-packed.js'
+          dest: 'src/extension/generated/testofill-content-packed.js'
        }
 //        ,extension: {
 //           src: ['lib/shared/*.js','lib/extension/**/*.js'],
-// 	        dest: 'src/extension/generated/extension-lib-packed.js'
+//           dest: 'src/extension/generated/extension-lib-packed.js'
 //        }
     },
     compress: {

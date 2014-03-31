@@ -97,16 +97,16 @@ function mergeIntoOptions(tab, formListJson) {
     // data sanitization
     if (typeof rules === "undefined") {
       rules = {"forms": {}};
-    } else if (typeof (rules["forms"]) === "undefined") {
-      rules["forms"] = {};
+    } else if (typeof (rules.forms) === "undefined") {
+      rules.forms = {};
     }
-    if (typeof (rules["forms"][url]) === "undefined") {
-      rules["forms"][url] = [];
+    if (typeof (rules.forms[url]) === "undefined") {
+      rules.forms[url] = [];
     }
 
     // data merging
-    var existingUrlForms = rules["forms"][url];
-    rules["forms"][url] = existingUrlForms.concat(formListJson);
+    var existingUrlForms = rules.forms[url];
+    rules.forms[url] = existingUrlForms.concat(formListJson);
 
     saveRulesToStorage(rules, function(error) {
       if (typeof error === 'undefined') {
@@ -189,7 +189,7 @@ chrome.runtime.onInstalled.addListener(function() {
  * @param namespace {string} e.g. 'sync'
  */
 chrome.storage.onChanged.addListener(function(changes, namespace) {
-  for (key in changes) {
+  for (var key in changes) {
     if (key !== 'testofill.rules') return;
 
     // TODO Notify Options page to reload?

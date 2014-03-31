@@ -148,25 +148,30 @@ function makeValueFrom(inputGrp) {
 }
 
 //---------------------------------------------------------------------- LISTENERS
+var initialized;
 
-// Listen for message from the popup or ctx. menu with the selected ruleSet
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponseFn){
-  var fromExtension = !sender.tab;
-  if (!fromExtension) return;
+if (_.isUndefined(initialized)) {
+  initialized = true;
 
-  var payload = message.payload;
+  // Listen for message from the popup or ctx. menu with the selected ruleSet
+  chrome.runtime.onMessage.addListener(function(message, sender, sendResponseFn){
+    var fromExtension = !sender.tab;
+    if (!fromExtension) return;
 
-  if (message.id === "fill_form") {
-    var ruleSet = payload;
-    fillForms(ruleSet);
-  } else if (message.id === "save_form") {
-    sendResponseFn(makeTestofillJsonFromPageForms());
-  } else if (message.id === "extracted_forms_saved") {
-    alert("Input from " + payload.count + " forms has been saved for " + payload.url + "\n(See console log for details)");
-  } else if (message.id === "extracted_forms_save_failed") {
-    alert("FAILED to save " + payload.count + " forms extracted from " + payload.url + " due to " + payload.error);
-  } else {
-    console.log("ERROR: Unsupported message id received: " + message.id, message);
-  }
+    var payload = message.payload;
 
-});
+    if (message.id === "fill_form") {
+      var ruleSet = payload;
+      fillForms(ruleSet);
+    } else if (message.id === "save_form") {
+      sendResponseFn(makeTestofillJsonFromPageForms());
+    } else if (message.id === "extracted_forms_saved") {
+      alert("Input from " + payload.count + " forms has been saved for " + payload.url + "\n(See console log for details)");
+    } else if (message.id === "extracted_forms_save_failed") {
+      alert("FAILED to save " + payload.count + " forms extracted from " + payload.url + " due to " + payload.error);
+    } else {
+      console.log("ERROR: Unsupported message id received: " + message.id, message);
+    }
+
+  });
+}

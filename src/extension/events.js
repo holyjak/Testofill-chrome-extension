@@ -25,10 +25,10 @@ function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {
   });
 }
 
-function sendMessageToContentScript(tab, messageId, payload, responseCallback ) {
-    chrome.tabs.executeScript(tab.id, {file: "generated/testofill-content-packed.js"}, function() {
-      chrome.tabs.sendMessage(tab.id, {id: messageId, payload: payload}, responseCallback);
-    });
+function sendMessageToContentScript(tab, messageId, payload, responseCallback) {
+  chrome.tabs.executeScript(tab.id, {file: "generated/testofill-content-packed.js"}, function() {
+    chrome.tabs.sendMessage(tab.id, {id: messageId, payload: payload}, responseCallback);
+  });
 }
 
 /**
@@ -192,7 +192,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
   for (var key in changes) {
     if (key !== 'testofill.rules') return;
 
-    // TODO Notify Options page to reload?
+    // TODO Notify Options page to reload? Update browser icon?
 
   }
 });

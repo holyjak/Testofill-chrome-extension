@@ -15,13 +15,21 @@ Based on [work by Akkunchoi](http://akkunchoi.github.io/Autofill-chrome-extensio
 Description from Chrome Web Shop
 --------------------------------
 
-Testofill allows you to define one or more sets of rules for filling forms on a particular page and to fill them in automatically or on demand. It targets people that can write little CSS (such as "[name='myfield']") and that need to be able to choose from a sets of values to fill in. A typical example is a tester that needs to repeatedly fill in different search criteria to test her app and thus wants to define rule sets such as "Simple book search" and "Advanced book search".
+Testofill allows you to define one or more sets of rules for filling forms on a particular page and to fill them in automatically or on demand with hardcoded or random values. It targets people that can write little CSS (such as "[name='myfield']") and that need to be able to choose from a sets of values to fill in. A typical example is a tester that needs to repeatedly fill in different search criteria to test her app and thus wants to define rule sets such as "Simple book search" and "Advanced book search".
 
-The main advantages are being able to have multiple sets of values for a single form and having full access to and control over these values.
+The main advantages are being able to have multiple sets of values for a single form, having full access to and control over these values, and ability to generate random values.
 
 It is also possible to create rules automatically from a filled form and adjust them later.
 
 Tip: You likely want to enable the extension in Incognito mode on the Extensions page to be able to use it when Incognito.
+
+Change log:
+  * 0.7.2
+    - experimental support for creating random values using Chance.js
+    - fixed repeated save form confirmation popup
+    - added save form logging
+  * 0.6.0
+    - increase limit on config size frm 4kB to 5MB (and drop sync across browsers)
 
 More info at the project page (https://github.com/jakubholynet/Testofill-chrome-extension/).
 

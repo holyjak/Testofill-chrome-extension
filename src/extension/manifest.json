@@ -19,10 +19,6 @@
       "19": "autofill_16x16.png"
     }
 	},
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  },
   "content_scripts": [
     {
       "matches" : [

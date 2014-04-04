@@ -26,6 +26,10 @@ function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {
 }
 
 function sendMessageToContentScript(tab, messageId, payload, responseCallback) {
+  // Beware - there is an issue here:
+  // We re-insert the script every time, even if already inserted (could lead to duplicate listeners etc.)
+  // Could be fixed by sending msg first and only exec. script if it fails (b/c not inserted yet).
+  // Notice that when the plugin is updated, it also needs to re-insert the content script (communication will fail)
   chrome.tabs.executeScript(tab.id, {file: "generated/testofill-content-packed.js"}, function() {
     chrome.tabs.sendMessage(tab.id, {id: messageId, payload: payload}, responseCallback);
   });

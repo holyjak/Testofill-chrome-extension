@@ -1,5 +1,20 @@
 # TODO
 
+## Permissions
+
+Using the `activeTab` permission does not pop up warning to users when installing about access to all possible; only grants access after the user invokes the extension and until closed/navigated away - contrary to `tabs`.
+
+See https://developer.chrome.com/extensions/activeTab .
+
+=>
+
+* Consider making `tabs` optional (=> not being able to update browser action icon - but it does not work well anyway)
+
+activeTab gives you:
+
+* Call tabs.executeScript or tabs.insertCSS on that tab.
+* Get the URL, title, and favicon for that tab via an API that returns a tabs.Tab object (essentially, activeTab grants the tabs permission temporarily).
+
 ## Generative
 
 * Use $ to prefix fns

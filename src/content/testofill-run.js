@@ -148,30 +148,32 @@ function makeValueFrom(inputGrp) {
 }
 
 //---------------------------------------------------------------------- LISTENERS
-var initialized;
 
-if (_.isUndefined(initialized)) {
-  initialized = true;
+/** Listen for message from the popup or ctx. menu with the selected ruleSet */
+function handleMessage(message, sender, sendResponseFn){
+  var fromExtension = !sender.tab;
+  if (!fromExtension) return;
 
-  // Listen for message from the popup or ctx. menu with the selected ruleSet
-  chrome.runtime.onMessage.addListener(function(message, sender, sendResponseFn){
-    var fromExtension = !sender.tab;
-    if (!fromExtension) return;
+  var payload = message.payload;
 
-    var payload = message.payload;
+  if (message.id === "fill_form") {
+    var ruleSet = payload;
+    fillForms(ruleSet);
+  } else if (message.id === "save_form") {
+    sendResponseFn(makeTestofillJsonFromPageForms());
+  } else if (message.id === "extracted_forms_saved") {
+    alert("Input from " + payload.count + " forms has been saved for " + payload.url + "\n(See console log for details)");
+  } else if (message.id === "extracted_forms_save_failed") {
+    alert("FAILED to save " + payload.count + " forms extracted from " + payload.url + " due to " + payload.error);
+  } else {
+    console.log("ERROR: Unsupported message id received: " + message.id, message);
+  }
 
-    if (message.id === "fill_form") {
-      var ruleSet = payload;
-      fillForms(ruleSet);
-    } else if (message.id === "save_form") {
-      sendResponseFn(makeTestofillJsonFromPageForms());
-    } else if (message.id === "extracted_forms_saved") {
-      alert("Input from " + payload.count + " forms has been saved for " + payload.url + "\n(See console log for details)");
-    } else if (message.id === "extracted_forms_save_failed") {
-      alert("FAILED to save " + payload.count + " forms extracted from " + payload.url + " due to " + payload.error);
-    } else {
-      console.log("ERROR: Unsupported message id received: " + message.id, message);
-    }
+}
 
-  });
+// Add listeners - invoked whenever the user presses the browser action icon or when
+// we (re)insert the content script => avoid adding the listener if already there
+// NOTE: `chrome.runtime.onMessage.hasListener(handleMessage` always returns false?!
+if (!chrome.runtime.onMessage.hasListeners()) {
+  chrome.runtime.onMessage.addListener(handleMessage);
 }

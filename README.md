@@ -1,4 +1,4 @@
-![icon](src/autofill_16x16.png) Testofill, the Form Filler for Testers Chrome Extension
+![icon](src/extension/autofill_16x16.png) Testofill, the Form Filler for Testers Chrome Extension
 =======================================================================================
 
 Goal: Enable testers to fill forms automatically/on-demand with predefined and/or generated values.

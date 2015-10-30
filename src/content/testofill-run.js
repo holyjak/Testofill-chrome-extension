@@ -63,7 +63,15 @@ function fillField(fieldElm, fieldRule) {
   } else {
     fieldElm.value = fieldRule.value;
   }
-}
+  
+  if ("createEvent" in document) {
+      var evt = document.createEvent("HTMLEvents");
+      evt.initEvent("change", false, true);
+      fieldElm.dispatchEvent(evt);
+  }
+  else
+      fieldElm.fireEvent("onchange");
+  }
 
 //---------------------------------------------------------------------- SAVE FORM
 

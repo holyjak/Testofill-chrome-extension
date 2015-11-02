@@ -64,20 +64,18 @@ function fillField(fieldElm, fieldRule) {
     fieldElm.value = fieldRule.value;
   }
   
+  var eventName = "change";
+  if(fieldElm.type === 'checkbox'){
+    eventName = "click";
+  }
+  
   if ("createEvent" in document) {
       var evt = document.createEvent("HTMLEvents");
-      
-      if(fieldElm.type === 'checkbox'){
-        evt.initEvent("click", true, true);
-      }
-      else {
-        evt.initEvent("change", true, true);
-      }
-      
+      evt.initEvent(eventName, true, true);
       fieldElm.dispatchEvent(evt);
   }
   else
-      fieldElm.fireEvent("onchange");
+      fieldElm.fireEvent("on" + eventName);
   }
 
 //---------------------------------------------------------------------- SAVE FORM

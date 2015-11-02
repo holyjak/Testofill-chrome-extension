@@ -66,7 +66,14 @@ function fillField(fieldElm, fieldRule) {
   
   if ("createEvent" in document) {
       var evt = document.createEvent("HTMLEvents");
-      evt.initEvent("change", false, true);
+      
+      if(fieldElm.type === 'checkbox'){
+        evt.initEvent("click", true, true);
+      }
+      else {
+        evt.initEvent("change", true, true);
+      }
+      
       fieldElm.dispatchEvent(evt);
   }
   else

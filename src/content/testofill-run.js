@@ -74,9 +74,11 @@ function fillField(fieldElm, fieldRule) {
       evt.initEvent(eventName, true, true);
       fieldElm.dispatchEvent(evt);
   }
-  else
+  else 
+  {
       fieldElm.fireEvent("on" + eventName);
   }
+}
 
 //---------------------------------------------------------------------- SAVE FORM
 

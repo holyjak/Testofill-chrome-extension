@@ -24,6 +24,8 @@ It is also possible to create rules automatically from a filled form and adjust 
 Tip: You likely want to enable the extension in Incognito mode on the Extensions page to be able to use it when Incognito.
 
 Change log:
+  * 0.8.0
+    - partial support for forms using React.js (text input)
   * 0.7.2
     - experimental support for creating random values using Chance.js
     - fixed repeated save form confirmation popup
@@ -125,8 +127,16 @@ or follow the manual installation instructions below.
 
 First, clone/download this repository.
 
+Then run in this directory:
+
+```shell
+    npm install
+    npm i grunt-cli -g
+    grunt # This will produce ./src/extension/generated/testofill-content-packed.js
+```
+
 Next, open the Extensions page in Chrome, check "Developer mode"
-and click "Load unpacked extension...", navigate to the `src``
+and click "Load unpacked extension...", navigate to the `src/extension/`
 directory of this repo. (You can then also click "Pack extension...".)
 
 You also likely want to check "Allow in incognito mode" for the extension if you use incognito windows for testing.

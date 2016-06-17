@@ -37,6 +37,9 @@ function fillField(fieldElm, fieldRule) {
 
   if (fieldElm.type === 'checkbox') {
     fieldElm.checked = fieldRule.value;
+    // TODO Find out what event to trigger so that React will notice the change
+    // It will work with new MouseEvent('click', {'view': window,'bubbles': true})
+    // but that also changes the value; 'change' has no effect
   } else if (fieldElm.type === 'select-one') {
     for(var i = fieldElm.length - 1; i >= 0; i--) {
       var opt = fieldElm[i];
@@ -60,8 +63,10 @@ function fillField(fieldElm, fieldRule) {
     // find the one with matching value or unset all
   } else if (fieldRule.textContent) {
     fieldElm.textContent = fieldRule.textContent; // labels, text elements
-  } else {
+    fieldElm.dispatchEvent(new Event('input', {bubbles: true})); // Notify e.g. React of the changed value
+ } else { // Typically a text <input>
     fieldElm.value = fieldRule.value;
+    fieldElm.dispatchEvent(new Event('input', {bubbles: true})); // Notify e.g. React of the changed value
   }
 }
 

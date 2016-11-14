@@ -165,6 +165,7 @@ manually set the label, using the `textContent` attribute. Ex.:
 ChangeLog
 ----------------
 
+- 2016-11 v0.8 partial support for React forms (text inputs, text areas)
 - 2014-3 v0.7
   - experimental support for generating random values via Chance.js
   - added some simple mocha tests, jshint (failing so far)
@@ -225,3 +226,8 @@ Form filling is implemented in the content script
 [`events.js`](https://github.com/jakubholynet/Testofill-chrome-extension/blob/master/src/events.js) contains the crucial `findMatchingRules`, which roles rule sets from options, finds those matching the current URL, and calls the provided callback for them. Behavior of the context menu and badge icon are defined here as well.
 
 [`popup.js`](https://github.com/jakubholynet/Testofill-chrome-extension/blob/master/src/popup.js) defines the selection popup that opens when multiple rule sets match the current URL and that triggers form filling when one is selected.
+
+### Publication
+
+Run `grunt` then go to [Chrome Dev Dashboard](https://chrome.google.com/webstore/developer/edit/pkgdgajoinhkfldibdaledjikboognnl) for the plugin and upload the generated `./Testofill-dist.zip`.
+

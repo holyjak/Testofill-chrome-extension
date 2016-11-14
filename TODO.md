@@ -28,6 +28,7 @@ activeTab gives you:
 
 * Make browser action icon more reliable
 * Better logging of save form when not matches
+* Make it work with forms using React - trigger events it listens to; experiment with http://jsfiddle.net/zcz1p35n/4/ 
 
 ## Fixme
 

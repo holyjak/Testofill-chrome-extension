@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-      files: ['Gruntfile.js', 'src/content/*.js','src/extension/*.js'],
+      src: ['Gruntfile.js', 'src/content/*.js','src/extension/*.js'],
       options: {
         //maxlen: 80,
         //quotmark: 'single'
@@ -59,4 +59,3 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['jshint', 'simplemocha','concat','compress']);
 
 };
-

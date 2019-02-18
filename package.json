@@ -2,14 +2,14 @@
   "name": "Testofill",
   "version": "0.8.0",
   "devDependencies": {
-    "grunt": "~0.4.4",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-jshint": "~0.9.2",
-    "grunt-contrib-compress": "~0.7.0",
+    "grunt": "~1.0.3",
+    "grunt-contrib-concat": "~1.0.1",
+    "grunt-contrib-jshint": "2.0.0",
+    "grunt-contrib-compress": "~1.4.3",
     "grunt-simple-mocha": "~0.4.0",
-    "underscore": "~1.6.0",
-    "grunt-contrib-watch": "~0.6.1",
-    "chai": "~1.9.1",
-    "chance": "~0.5.5"
+    "underscore": "~1.9.1",
+    "grunt-contrib-watch": "~1.1.0",
+    "chai": "~4.2.0",
+    "chance": "~1.0.18"
   }
 }

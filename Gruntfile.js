@@ -6,6 +6,7 @@ module.exports = function(grunt) {
     jshint: {
       src: ['Gruntfile.js', 'src/content/*.js','src/extension/*.js'],
       options: {
+        esversion: 6
         //maxlen: 80,
         //quotmark: 'single'
       }

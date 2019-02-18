@@ -151,17 +151,18 @@ function triggerAutofillingIfEnabled(tab, ruleSets) {
  * BEWARE: Seems not to be triggered for cached pages.
  */
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  if (changeInfo.url) {
-    // Default badge/popup if no matching rulesets
-    chrome.browserAction.setBadgeText({tabId: tabId, text: 'N/A'});
-    chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color: '#808080'});
-    chrome.browserAction.setPopup({tabId: tabId, popup: 'no-rulesets.html?url=' + encodeURI(changeInfo.url)});
+  if (changeInfo.status !== "complete") return;
 
-    findMatchingRules(changeInfo.url, function(ruleSets){
-      setBadgeAndIconAction(tabId, ruleSets);
-      triggerAutofillingIfEnabled(tab, ruleSets);
-    });
-  }
+  const url = tab.url;
+  // Default badge/popup if no matching rulesets
+  chrome.browserAction.setBadgeText({tabId: tabId, text: 'N/A'});
+  chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color: '#808080'});
+  chrome.browserAction.setPopup({tabId: tabId, popup: 'no-rulesets.html?url=' + encodeURI(url)});
+
+  findMatchingRules(url, function(ruleSets){
+    setBadgeAndIconAction(tabId, ruleSets);
+    triggerAutofillingIfEnabled(tab, ruleSets);
+  });
   // Note: changeInfo.status loading/complete/undefined; url only while 'loading'
   // - Not triggered when another tab activated (i.e. switching tabs)
   // - Also triggered for new tab, url=chrome://newtab/

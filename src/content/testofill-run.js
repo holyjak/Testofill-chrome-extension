@@ -201,7 +201,9 @@ function handleMessage(message, sender, sendResponseFn){
     const extractedForms = makeTestofillJsonFromPageForms();
     sendResponseFn(extractedForms);
   } else if (message.id === "extracted_forms_saved") {
-    alert("Input from " + payload.count + " forms has been saved for " + payload.url + "\n(See DevTools Console for details)");
+    alert("Input from " + payload.count + " forms has been saved for " + payload.url +
+      (payload.count ? `\nGive it a name in the extension options if you want multiple values for the form.` : '') +
+      "\n(See DevTools Console for details)");
   } else if (message.id === "extracted_forms_save_failed") {
     alert("FAILED to save " + payload.count + " forms extracted from " + payload.url + " due to " + payload.error);
   } else {

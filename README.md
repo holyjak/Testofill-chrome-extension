@@ -24,6 +24,9 @@ It is also possible to create rules automatically from a filled form and adjust 
 Tip: You likely want to enable the extension in Incognito mode on the Extensions page to be able to use it when Incognito.
 
 Change log:
+  * 0.11 - Save forms accepts fields that have only id and no name
+  * 0.10 - Full support for React forms (v16)
+  * 0.9 - Fix autofill
   * 0.8.0
     - partial support for forms using React.js (text input)
   * 0.7.2

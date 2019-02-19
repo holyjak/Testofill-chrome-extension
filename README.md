@@ -165,6 +165,7 @@ manually set the label, using the `textContent` attribute. Ex.:
 ChangeLog
 ----------------
 
+- 2019-02-19 v0.10 Full support for React forms (v16)
 - 2019-02-18 v0.9 Fix autofill
 - 2016-11 v0.8 partial support for React forms (text inputs, text areas)
 - 2014-3 v0.7

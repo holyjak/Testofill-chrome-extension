@@ -1,6 +1,6 @@
 {
   "name": "Testofill",
-  "version": "0.8.0",
+  "version": "0.10.0",
   "devDependencies": {
     "grunt": "~1.0.3",
     "grunt-contrib-concat": "~1.0.1",

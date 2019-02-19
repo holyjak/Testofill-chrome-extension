@@ -23,7 +23,9 @@ The main advantages are being able to have multiple sets of values for a single 
 
 It is also possible to create rules automatically from a filled form and adjust them later.
 
-Tip: You likely want to enable the extension in Incognito mode on the Extensions page to be able to use it when Incognito.
+Tip: You need to enable the extension in Incognito mode on the Extensions page if you want to be able to use it when Incognito.
+
+Security tip: Only allow the plugin access to the sites where you use it - see "Add or remove access to a specific site" at https://support.google.com/chrome_webstore/answer/2664769
 
 Change log:
   * 0.11 - Save forms accepts fields that have only id and no name

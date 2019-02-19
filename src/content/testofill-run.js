@@ -42,20 +42,19 @@ function fillField(fieldElm, fieldRule) {
   }
 
   if (fieldElm.type === 'checkbox') {
-    fieldElm.checked = fieldRule.value;
-    // TODO Find out what event to trigger so that React will notice the change
-    // It will work with new MouseEvent('click', {'view': window,'bubbles': true})
-    // but that also changes the value; 'change' has no effect
-  } else if (fieldElm.type === 'select-one') {
-    for(var i = fieldElm.length - 1; i >= 0; i--) {
-      var opt = fieldElm[i];
-      opt.selected = (opt.value === fieldRule.value);
-    }
+    assertFieldType(fieldElm.type, fieldRule, 'boolean');
+    if (fieldElm.checked === Boolean(fieldRule.value)) return;
+    fieldElm.dispatchEvent(new MouseEvent('click', {'view': window,'bubbles': true}));
+  } else if (fieldElm.type === 'select-one') { // FIXME reuse select-multi code
+    assertFieldType(fieldElm.type, fieldRule, 'string');
+    if (fieldElm.value === fieldRule.value) return;
+    fieldElm.value = fieldRule.value;
+    fieldElm.dispatchEvent(new Event('change', {'view': window,'bubbles': true}));
   } else if (fieldElm.type === 'select-multiple') {
-    var value = (fieldRule.value === null)? [] : fieldRule.value;
+    const value = (fieldRule.value === null) ? [] : fieldRule.value;
     if (!Array.isArray(value)) {
       console.error("The form element is a select-multiple and thus the value " +
-        "to fill in should be an array of 0+ values but it is not an array; " +
+        "to fill in should be null or an array of 0+ values but it is not an array; " +
                     "query: " + fieldRule.query + ", the value: ", value,
                     "; the field: ", fieldElm);
       return;
@@ -64,9 +63,14 @@ function fillField(fieldElm, fieldRule) {
       var multiOpt = fieldElm[j];
       multiOpt.selected = (value.indexOf(multiOpt.value) >= 0);
     }
+    fieldElm.dispatchEvent(new Event('change', {'view': window,'bubbles': true}));
   } else if (fieldElm.type === 'radio') {
-    fieldElm.checked = (fieldElm.value === fieldRule.value);
-    // find the one with matching value or unset all
+    assertFieldType(fieldElm.type, fieldRule, 'string');
+    console.assert(fieldRule.value !== null, `null is not supported for radio fields, you must choose a value; rule query=${fieldRule.query}`);
+    // find the one with matching value or unset all:
+    const wantChecked = (fieldElm.value === fieldRule.value);
+    if (wantChecked === fieldElm.checked) return;
+    fieldElm.dispatchEvent(new MouseEvent('click', {'view': window,'bubbles': true}));
   } else if (fieldRule.textContent) {
     fieldElm.textContent = fieldRule.textContent; // labels, text elements
     fieldElm.dispatchEvent(new Event('input', {bubbles: true})); // Notify e.g. React of the changed value
@@ -75,6 +79,24 @@ function fillField(fieldElm, fieldRule) {
     fieldElm.dispatchEvent(new Event('input', {bubbles: true})); // Notify e.g. React of the changed value
   }
 }
+
+/** Warn if fieldRule.value is not of the expectedType. */
+function assertFieldType(fieldType, fieldRule, expectedType) {
+  if (fieldRule.value === null) return;
+  const actualType = (typeof fieldRule.value === 'object') ?
+    fieldRule.value.constructor.name : typeof fieldRule.value;
+  if (actualType === expectedType) return true;
+  console.assert(
+    actualType === expectedType,
+    `fieldRule.value for a ${fieldType} must be a ${expectedType} (or null); fieldRule={query: ${fieldRule.query}, value:${fieldRule.value}}`);
+  return false;
+}
+
+// function elmToString(elm) {
+//   if (elm.id) return `[id=${elm.id}]`;
+//   if (elm.name) return `[name=${elm.name}]`;
+//   if (elm.className) return `[class=${elm.className}]`;
+// }
 
 //---------------------------------------------------------------------- SAVE FORM
 

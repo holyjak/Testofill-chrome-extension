@@ -9,8 +9,7 @@
                 ver: 0,
                 q: "",
                 chboxin_poisonous: true,
-                radioin: "1",
-                radioin_none: "p",
+                radioin: "brokkoli",
                 hiddenin: "hidden_default",
                 passwordin: "",
                 selectin: "",
@@ -21,7 +20,7 @@
             const setState = (key, val) => {
                 if (key) {
                     state = {...state, [key]: val, ver: state.ver + 1}
-                    console.log("State updated", state.ver, key)
+                    //console.log("State updated", state.ver, key)
                 }
                 const domContainer = document.querySelector('#app-root');
                 ReactDOM.render(<MyForm {...state}/>, domContainer);
@@ -29,14 +28,13 @@
             const resetState = () => { state = defaults; }
             // COMPONENTS
             function MyForm(form) {
-                console.log("MyForm.render...")
+                //console.log("MyForm.render...")
                 const {
                     ver,
                     q,
                     chboxin,
                     chboxin_poisonous,
                     radioin,
-                    radioin_none,
                     hiddenin,
                     passwordin,
                     selectin,
@@ -58,21 +56,15 @@
                     Soup?<input type="CHECKBOX" name="chboxin" id="$chboxin" onChange={flipCheckbox} checked={!!form["chboxin"]}/><em>(-&gt; checked)</em>
                     Poisonous?<input type="CHECKBOX" name="chboxin_poisonous" id="$chboxin_poisonous" onChange={flipCheckbox} checked={!!form["chboxin_poisonous"]}/><em>(-&gt; unchecked)</em>
                     </p><p>
-                    Preferred: <input type="RADIO" name="radioin" value="1"
-                        onChange={updateField} checked={radioin == "1"}/>Brokkoli
-                    <input type="RADIO" name="radioin" id="$radioin2" value="2" onChange={updateField}  checked={radioin == "2"}/>Tomatoes
+                    Preferred: <input type="RADIO" name="radioin" value="brokkoli"
+                        onChange={updateField} checked={radioin == "brokkoli"}/>Brokkoli
+                    <input type="RADIO" name="radioin" id="$radioin2" value="tomatoes" onChange={updateField}  checked={radioin == "tomatoes"} className="radioin2Class"/>Tomatoes
                     <em>(-&gt; Tomatoes)</em>
-                    </p><p>
-
-
-                    Eat at: <input type="RADIO" name="radioin_none" value="p" onChange={updateField} checked={radioin_none == "p"}/>Park
-                    <input type="RADIO" name="radioin_none" value="h" onChange={updateField} checked={radioin_none == "h"}/>Home
-                    <em>(De-select so that nothing selected)</em>
                     </p><p>
                     <label>Image: <input type="file" id="$file" name="filein"/><em>(unsupported?)</em></label>
                     <input type="hidden" name="hiddenin" id="$hiddenin" value={hiddenin}/>
                     </p><p>
-                    <input type="password" name="passwordin" id="$passwordin" placeholder="Random password" onChange={updateField} value={passwordin}/>
+                    <input type="password" name="passwordin" id="$passwordin" placeholder="Random password" onChange={updateField} value={passwordin} autoComplete="psw"/>
                     </p><p>
                     Spiceness: <select name="selectin" id="$selectin" onChange={updateField} value={selectin}>
                         <option value="hot">Hot</option>
@@ -112,47 +104,6 @@
             (+ it does not set the Radios)
         </strong>
         <div id="app-root"></div>
-        <!--form>
-            <p>
-            <input type="text" name="q" id="$box" placeholder="My favourite meal name" size="30">
-            </p><p>
-            Soup?<input type="CHECKBOX" name="chboxin" id="$chboxin" value="checkbox1"><em>(-&gt; checked)</em>
-            Poisonous?<input type="CHECKBOX" name="chboxin_poisonous" id="$chboxin_poisonous" value="xy" checked><em>(-&gt; unchecked)</em>
-            </p><p>
-            Preferred: <input type="RADIO" name="radioin" value="radio1_on" checked>Brokkoli
-            <input type="RADIO" name="radioin" value="radio2_off">Tomatoes
-            <em>(-&gt; Tomatoes)</em>
-            </p><p>
-            Eat at: <input type="RADIO" name="radioin_none" value="1" checked>Park
-            <input type="RADIO" name="radioin_none" value="2">Home
-            <em>(De-select so that nothing selected)</em>
-            </p><p>
-            <label>Image: <input type="file" id="$file" name="filein"><em>(unsupported?)</em></label>
-            <input type="hidden" name="hiddenin" id="$hiddenin">
-            </p><p>
-            <input type="password" name="passwordin" id="$passwordin" placeholder="Random password">
-            </p><p>
-            Spiceness: <select name="selectin" id="$selectin">
-                <option value="hot">Hot</option>
-                <option value="veryhot">Very hot</option>
-            </select><em>(-&gt; very hot)</em>
-            </p><p>
-            Use: <select name="selectin_none" id="$selectin_none">
-                <option value="">Select one</option>
-                <option value="knife">Knife &amp; fork</option>
-                <option value="hands" selected>Hands</option>
-            </select><em>(-&gt; De-select so that nothing selected)</em>
-            </p><p>
-            Select 0+: <select name="selectmultiin" id="$selectmultiin" multiple="true" size="3">
-                <option value="lassi1">Lassi, mango</option>
-                <option value="lassi2">Lassi, salty</option>
-                <option value="raita">Raita</option>
-            </select><em>(-&gt; Select all)</em>
-            </p><p>
-            <input type="reset" value="Reset" id="$reset"/>
-            <input type="submit" value="Submit" id="$submit"/>
-            </p>
-        </form-->
 
         <h3>Rules for this form:</h3>
         <code><pre>
@@ -175,11 +126,7 @@
           },
           {
             "query": "[name='radioin']",
-            "value": "radio2_off"
-          },
-          {
-            "query": "[name='radioin_none']",
-            "value": null
+            "value": "tomatoes"
           },
           {
             "query": "[name='hiddenin']",

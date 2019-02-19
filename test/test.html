@@ -15,14 +15,10 @@
             <input type="RADIO" name="radioin" value="radio2_off">Tomatoes
             <em>(-&gt; Tomatoes)</em>
             </p><p>
-            Eat at: <input type="RADIO" name="radioin_none" value="1" checked>Park
-            <input type="RADIO" name="radioin_none" value="2">Home
-            <em>(De-select so that nothing selected)</em>
-            </p><p>
             <label>Image: <input type="file" id="$file" name="filein"><em>(unsupported?)</em></label>
             <input type="hidden" name="hiddenin" id="$hiddenin">
             </p><p>
-            <input type="password" name="passwordin" id="$passwordin" placeholder="Random password">
+            <input type="password" name="passwordin" id="$passwordin" placeholder="Random password" autocomplete="psw">
             </p><p>
             Spiceness: <select name="selectin" id="$selectin">
                 <option value="hot">Hot</option>
@@ -69,10 +65,6 @@
             "value": "radio2_off"
           },
           {
-            "query": "[name='radioin_none']",
-            "value": null
-          },
-          {
             "query": "[name='hiddenin']",
             "value": "Hidden message"
           },
@@ -102,19 +94,19 @@
         "fields": [
           {
             "query": "[name='q']",
-            "value": "Testofill rocks!"
+            "value": "(1) Val from ruleset #1"
           }
         ],
-        "name": "Bob the Test Manager"
+        "name": "Textfield rulest #1"
       },
       {
         "fields": [
           {
             "query": "[name='q']",
-            "value": "Value from another ruleSet"
+            "value": "(2) Val from ruleset #2"
           }
         ],
-        "name": "Another"
+        "name": "Textfield rulest #2"
       }
     ]
   }

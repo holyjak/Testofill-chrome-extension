@@ -109,34 +109,39 @@ function makeTestofillJsonFromPageForms() {
   var debugStrs = [];
 
   var formListJson =
-    _.map(document.forms, function(form){
+    _.map(document.forms, function(form, idx){
       var formName = "TODO Name this " + form.id;
       var fieldElms = Sizzle(":input", form); // Find inputs and  textareas, selects, and buttons:
 
-      var fieldElmsOnlyRelevant = _.filter(fieldElms, function(f) {
-            return f.name !== "" &&
+      var fieldElmsOnlyRelevant = _.filter(fieldElms, f =>
+            (f.name !== "" || f.id !== "") &&
               f.value !== '' &&
               excludedTypes.indexOf(f.type) === -1 &&
               !f.disabled &&
-              !f.readonly;
-          });
+              !f.readonly
+          );
 
       var jsonFieldsAll = _.chain(fieldElmsOnlyRelevant)
-          .groupBy('name') // group f.ex. radios into one array
-          .map(_.values) // turn {'fieldName': [field1, field2,...]} into just the array of fields
-          .map(function(inputGrp) {
-            return {"query": makeQueryFrom(inputGrp[0]), "value": makeValueFrom(inputGrp)};
-          })
+          .groupBy(f => f.name ? f.name : f.id) // group all radios with the same value into one array
+          .map(_.values) // turn {'fieldName': [field1, field2,...]} into just the array of fields (for that name/id)
+          .map(inputGrp => ({"query": makeQueryFrom(inputGrp[0]), "value": makeValueFrom(inputGrp)}))
           .value();
 
-      // Filter out checkboxes not selected, ...
-      var jsonFieldsOnlySet = _.filter(jsonFieldsAll, function(rule) {return rule.value !== false;});
+      // Filter out fields with no discernible value, ...
+      var jsonFieldsOnlySet = _.filter(jsonFieldsAll, rule => rule.value !== undefined);
 
-      debugStrs.push("Form " + form.id + ": out of " +
-        fieldElms.length + " fields, " +
-        (fieldElms.length - fieldElmsOnlyRelevant.length) +
-        " were irrelevant (no name or value / disabled / type such as hidden) and " +
-        (jsonFieldsAll.length - jsonFieldsOnlySet.length) + " were exluded due to having value of false");
+      const cntAllFields = fieldElms.length;
+      const formIdent = form.id || form.className || '';
+      let msg = `Form #${idx} ${formIdent ? `{${formIdent}}` : ''}`;
+      if (cntAllFields === 0) {
+          debugStrs.push(`${msg} has no fields`);
+      } else {
+        const cntIrrelevant = (fieldElms.length - fieldElmsOnlyRelevant.length);
+        if (cntIrrelevant) msg += ` ${cntIrrelevant}/${cntAllFields} field(s) were irrelevant (no name or value / disabled / type such as hidden)`;
+        const cntExcluded = (jsonFieldsAll.length - jsonFieldsOnlySet.length);
+        if (cntExcluded) msg += ` ${cntExcluded}/${cntAllFields} field(s) were exluded due to not having any value I could understand`;
+        debugStrs.push(`${msg}`);
+      }
 
       return {"name": formName, "fields": jsonFieldsOnlySet};
     });
@@ -150,13 +155,13 @@ function makeTestofillJsonFromPageForms() {
       " forms were skipped for they had no relevant fields");
   }
 
-  console.log("Report for Save forms at %s: ", document.location.toString(), debugStrs);
+  console.log(`Testofill: Report for Save forms of ${formsNonempty.length} out of ${document.forms.length} forms at ${document.location.toString()}: `, debugStrs, "See https://github.com/holyjak/Testofill-chrome-extension/wiki/Help:-Save-forms-saved-input-from-0-forms for help");
 
   return formsNonempty;
 }
 
 function makeQueryFrom(input) {
-  return "[name='" + input.name + "']";
+  return input.name ? "[name='" + input.name + "']" : "[id='" + input.id + "']";
 }
 
 function makeValueFrom(inputGrp) {
@@ -172,7 +177,7 @@ function makeValueFrom(inputGrp) {
   if (fieldElm.type === 'checkbox') {
     return fieldElm.checked;
   } else if (fieldElm.type === 'select-one') {
-    return fieldElm.selectedOptions[0].value; // TODO if none selected?
+    return (fieldElm.selectedOptions[0] || {}).value;
   } else if (fieldElm.type === 'select-multiple') {
     return _.pluck(fieldElm.selectedOptions, 'value');
   } else {
@@ -193,9 +198,10 @@ function handleMessage(message, sender, sendResponseFn){
     var ruleSet = payload;
     fillForms(ruleSet);
   } else if (message.id === "save_form") {
-    sendResponseFn(makeTestofillJsonFromPageForms());
+    const extractedForms = makeTestofillJsonFromPageForms();
+    sendResponseFn(extractedForms);
   } else if (message.id === "extracted_forms_saved") {
-    alert("Input from " + payload.count + " forms has been saved for " + payload.url + "\n(See console log for details)");
+    alert("Input from " + payload.count + " forms has been saved for " + payload.url + "\n(See DevTools Console for details)");
   } else if (message.id === "extracted_forms_save_failed") {
     alert("FAILED to save " + payload.count + " forms extracted from " + payload.url + " due to " + payload.error);
   } else {

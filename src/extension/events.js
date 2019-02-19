@@ -1,3 +1,8 @@
+/**
+ * Handle browsing and extension events, invoke the content script
+ * (testofill-run.js).
+ */
+
 //---------------------------------------------------------------- reusable: ruleSets, content, storage
 /* Get the rules and try to apply them to this page, if matched */
 function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {

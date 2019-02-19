@@ -1,3 +1,9 @@
+/**
+ * The Content Script injected into the browser document and
+ * invoked by messages from the extension (via event.js).
+ * @type {String}
+ */
+
 //---------------------------------------------------------------------- FILL FORM
 /* Apply the selected rule set to the current page, filling its form(s).
  * ruleSet ex.: {"name":"kid user test", "fields":

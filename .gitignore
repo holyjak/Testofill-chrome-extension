@@ -2,3 +2,5 @@
 node_modules/
 src/extension-libs.js
 src/testofill-content.js
+src/extension/generated/
+Testofill-dist.zip

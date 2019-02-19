@@ -1,6 +1,8 @@
 ![icon](src/extension/autofill_16x16.png) Testofill, the Form Filler for Testers Chrome Extension
 =======================================================================================
 
+[Install Testofill from Chrome Web Store](https://chrome.google.com/webstore/detail/testofill-form-filler-for/pkgdgajoinhkfldibdaledjikboognnl?hl=en-US)
+
 Goal: Enable testers to fill forms automatically/on-demand with predefined and/or generated values.
 It is possible to define and choose from multiple sets of values for a given form.
 

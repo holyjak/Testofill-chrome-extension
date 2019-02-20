@@ -88,18 +88,23 @@ function ctxMenuFillFormHandler(tab) {
 }
 
 function ctxMenuSaveFormHandler(tab) {
-  sendMessageToContentScript(tab, "save_form", {}, function(formListJson) {
-    mergeIntoOptions(tab, formListJson);
-  });
+  sendMessageToContentScript(tab, "save_form", {}, extractedForms => mergeIntoOptions(tab, extractedForms));
 }
 
 /** Merge the given map with the options.forms map. */
-function mergeIntoOptions(tab, formListJson) {
+function mergeIntoOptions(tab, extractedForms) {
+  const forms = extractedForms.forms;
+  const url = tab.url;
+
+  if (url !== extractedForms.url) {
+    // Skip because filling in forms does not handle iframes (yet?)
+    console.log(`Skipping ${forms.length} extracted from (iframe?) ${extractedForms.url} != tab url ${url}`);
+    return;
+  }
   chrome.storage.local.get('testofill.rules', function(items) {
     if (typeof chrome.runtime.lastError !== "undefined") {
       return; // TODO report error; how?
     }
-    var url = tab.url;
 
     var rules = items['testofill.rules'];
 
@@ -115,13 +120,13 @@ function mergeIntoOptions(tab, formListJson) {
 
     // data merging
     var existingUrlForms = rules.forms[url];
-    rules.forms[url] = existingUrlForms.concat(formListJson);
+    rules.forms[url] = existingUrlForms.concat(forms);
 
     saveRulesToStorage(rules, function(error) {
       if (typeof error === 'undefined') {
-        sendMessageToContentScript(tab, 'extracted_forms_saved', {url: url, count: formListJson.length});
+        sendMessageToContentScript(tab, 'extracted_forms_saved', {url: url, count: forms.length});
       } else {
-        sendMessageToContentScript(tab, 'extracted_forms_save_failed', {url: url, count: formListJson.length, error: error});
+        sendMessageToContentScript(tab, 'extracted_forms_save_failed', {url: url, count: forms.length, error: error});
       }
     });
 

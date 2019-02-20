@@ -157,7 +157,8 @@ function makeTestofillJsonFromPageForms() {
 
   console.log(`Testofill: Report for Save forms of ${formsNonempty.length} out of ${document.forms.length} forms at ${document.location.toString()}: `, debugStrs, "See https://github.com/holyjak/Testofill-chrome-extension/wiki/Help:-Save-forms-saved-input-from-0-forms for help");
 
-  return formsNonempty;
+  // A single page may contain multiple documents due to iframes so make it possible to distinguish them:
+  return {url: document.location.toString(), forms: formsNonempty};
 }
 
 function makeQueryFrom(input) {

@@ -1,39 +1,44 @@
 <html>
     <head>
+        <meta charset="UTF-8">
         <title>Testofill test</title>
+        <style type="text/css">
+            .wanted { border: 1px solid green; background-color: #ABEBC6}
+        </style>
     </head>
     <body>
         <h3>Food preferences</h3>
+        <p>Go either to <a href="http://localhost:1111/test.html#one">#one<a/> or <a href="http://localhost:1111/test.html#two">#two<a/>.</p>
         <form>
             <p>
             <input type="text" name="q" id="$box" placeholder="My favourite meal name" size="30">
             </p><p>
-            Soup?<input type="CHECKBOX" name="chboxin" id="$chboxin" value="checkbox1"><em>(-&gt; checked)</em>
-            Poisonous?<input type="CHECKBOX" name="chboxin_poisonous" id="$chboxin_poisonous" value="xy" checked><em>(-&gt; unchecked)</em>
+            <span class="wanted">Soup?<input type="CHECKBOX" name="chboxin" id="$chboxin" value="checkbox1">✅<em>(-&gt; checked)</em></span>
+            Poisonous?<input type="CHECKBOX" name="chboxin_poisonous" id="$chboxin_poisonous" value="xy" checked>⛔️<em>(-&gt; unchecked)</em>
             </p><p>
-            Preferred: <input type="RADIO" name="radioin" value="radio1_on" checked>Brokkoli
-            <input type="RADIO" name="radioin" value="radio2_off">Tomatoes
+            Preferred: <input type="RADIO" name="radioin" value="radio1_on" checked>⛔️ Brokkoli
+            <span class="wanted"><input type="RADIO" name="radioin" value="radio2_off">✅ Tomatoes</span>
             <em>(-&gt; Tomatoes)</em>
             </p><p>
             <label>Image: <input type="file" id="$file" name="filein"><em>(unsupported?)</em></label>
             <input type="hidden" name="hiddenin" id="$hiddenin">
             </p><p>
-            <input type="password" name="passwordin" id="$passwordin" placeholder="Random password" autocomplete="psw">
+            <input type="password" name="passwordin" id="$passwordin" placeholder="⛔️ Random password" autocomplete="psw">
             </p><p>
             Spiceness: <select name="selectin" id="$selectin">
-                <option value="hot">Hot</option>
-                <option value="veryhot">Very hot</option>
+                <option value="hot">⛔️ Hot</option>
+                <option value="veryhot" class="wanted">✅ Very hot</option>
             </select><em>(-&gt; very hot)</em>
             </p><p>
             Use: <select name="selectin_none" id="$selectin_none">
-                <option value="">Select one</option>
-                <option value="knife">Knife &amp; fork</option>
-                <option value="hands" selected>Hands</option>
+                <option value="">⛔️ Select one</option>
+                <option value="knife">⛔️ Knife &amp; fork</option>
+                <option value="hands" selected>⛔️ Hands</option>
             </select><em>(-&gt; De-select so that nothing selected)</em>
             </p><p>
             Select 0+: <select name="selectmultiin" id="$selectmultiin" multiple="true" size="2">
-                <option value="lassi">Lassi</option>
-                <option value="raita">Raita</option>
+                <option value="lassi" class="wanted">✅ Lassi</option>
+                <option value="raita" class="wanted">✅ Raita</option>
             </select><em>(-&gt; Select all)</em>
             </p><p>
             <input type="reset" value="Reset" id="$reset"/>

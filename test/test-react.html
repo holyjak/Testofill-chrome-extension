@@ -1,6 +1,10 @@
 <html>
     <head>
         <title>Testofill React test</title>
+        <meta charset="UTF-8">
+        <style type="text/css">
+            .wanted { border: 1px solid green; background-color: #ABEBC6}
+        </style>
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
         <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
@@ -48,41 +52,41 @@
                 return (
                 <form>
                     <strong>ver={ver} <button type="button" onClick={() => setState("ver", ver+1)}>+</button></strong>
-                    <pre>state={JSON.stringify(form, null, 2)}</pre>
+                    <code>state={JSON.stringify(form, null, 2)}</code>
                     <hr/>
                     <p>
-                    <input type="text" name="q" id="$box" placeholder="My favourite meal name" size="30" onChange={updateField} value={q}/>
+                    <input type="text" name="q" id="$box" placeholder="⛔️ My favourite meal name" size="30" onChange={updateField} value={q}/>
                     </p><p>
-                    Soup?<input type="CHECKBOX" name="chboxin" id="$chboxin" onChange={flipCheckbox} checked={!!form["chboxin"]}/><em>(-&gt; checked)</em>
-                    Poisonous?<input type="CHECKBOX" name="chboxin_poisonous" id="$chboxin_poisonous" onChange={flipCheckbox} checked={!!form["chboxin_poisonous"]}/><em>(-&gt; unchecked)</em>
+                    <span className="wanted">Soup?<input type="CHECKBOX" name="chboxin" id="$chboxin" onChange={flipCheckbox} checked={!!form["chboxin"]}/>✅</span><em>(-&gt; checked)</em>
+                    Poisonous?<input type="CHECKBOX" name="chboxin_poisonous" id="$chboxin_poisonous" onChange={flipCheckbox} checked={!!form["chboxin_poisonous"]}/>⛔️<em>(-&gt; unchecked)</em>
                     </p><p>
                     Preferred: <input type="RADIO" name="radioin" value="brokkoli"
-                        onChange={updateField} checked={radioin == "brokkoli"}/>Brokkoli
-                    <input type="RADIO" name="radioin" id="$radioin2" value="tomatoes" onChange={updateField}  checked={radioin == "tomatoes"} className="radioin2Class"/>Tomatoes
+                        onChange={updateField} checked={radioin == "brokkoli"}/>⛔️ Brokkoli
+                    <span className="wanted"><input type="RADIO" name="radioin" id="$radioin2" value="tomatoes" onChange={updateField}  checked={radioin == "tomatoes"} className="wanted"/>✅ Tomatoes</span>
                     <em>(-&gt; Tomatoes)</em>
                     </p><p>
                     <label>Image: <input type="file" id="$file" name="filein"/><em>(unsupported?)</em></label>
                     <input type="hidden" name="hiddenin" id="$hiddenin" value={hiddenin}/>
                     </p><p>
-                    <input type="password" name="passwordin" id="$passwordin" placeholder="Random password" onChange={updateField} value={passwordin} autoComplete="psw"/>
+                    <input type="password" name="passwordin" id="$passwordin" placeholder="⛔️ Random password" onChange={updateField} value={passwordin} autoComplete="psw"/>
                     </p><p>
                     Spiceness: <select name="selectin" id="$selectin" onChange={updateField} value={selectin}>
-                        <option value="hot">Hot</option>
-                        <option value="veryhot">Very hot</option>
+                        <option value="hot">⛔️ Hot</option>
+                        <option value="veryhot" className="wanted">✅ Very hot</option>
                     </select><em>(-&gt; very hot)</em>
                     </p><p>
                     Use: <select name="selectin_none" id="$selectin_none" onChange={updateField} value={selectin_none}>
-                        <option value="">Select one</option>
-                        <option value="knife">Knife &amp; fork</option>
-                        <option value="hands">Hands</option>
+                        <option value="">⛔️ Select one</option>
+                        <option value="knife">⛔️ Knife &amp; fork</option>
+                        <option value="hands">⛔️ Hands</option>
                     </select><em>(-&gt; De-select so that nothing selected)</em>
                     </p><p>
                     Select 0+:
                     <select name="selectmultiin" id="$selectmultiin" multiple={true} size="3"
                         value={selectmultiin} onChange={e => setState("selectmultiin", Array.from(event.target.selectedOptions, option => option.value))}>
-                        <option value="lassi1">Lassi, mango</option>
-                        <option value="lassi2">Lassi, salt</option>
-                        <option value="raita">Raita</option>
+                        <option value="lassi1" className="wanted">✅ Lassi, mango</option>
+                        <option value="lassi2" className="wanted">✅ Lassi, salt</option>
+                        <option value="raita" className="wanted">✅ Raita</option>
                     </select><em>(-&gt; Select all)</em>
                     </p><p>
                     <input type="reset" value="Reset" id="$reset" onClick={resetState}/>
@@ -94,15 +98,9 @@
             // CONNECT
             setState();
         </script>
-        <style type="text/css">
-        </style>
     </head>
     <body>
         <h3>React form</h3>
-        <strong>
-            TODO: re-render not invoked, global state not changed when Testofill runs
-            (+ it does not set the Radios)
-        </strong>
         <div id="app-root"></div>
 
         <h3>Rules for this form:</h3>

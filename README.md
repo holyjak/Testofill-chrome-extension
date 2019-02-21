@@ -175,7 +175,8 @@ ChangeLog
 
 - 2019-02-20 v0.12 - Save forms ignores iframes instead of being confused by them
 - 2019-02-19 v0.11 Save forms accepts fields that have only id and no name
-- 2019-02-19 v0.10 Full support for React forms (v16)
+- 2019-02-19
+  - v0.10 Full support for React forms (v16); see [react-trigger-change](https://github.com/vitalyq/react-trigger-change/blob/master/lib/change.js#L107)
 - 2019-02-18 v0.9 Fix autofill
 - 2016-11 v0.8 partial support for React forms (text inputs, text areas)
 - 2014-3 v0.7

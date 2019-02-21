@@ -48,9 +48,11 @@ function fillField(fieldElm, fieldRule) {
   } else if (fieldElm.type === 'select-one') { // FIXME reuse select-multi code
     assertFieldType(fieldElm.type, fieldRule, 'string');
     if (fieldElm.value === fieldRule.value) return;
+    fieldElm.dispatchEvent(new Event('focus', {bubbles: true})); // In some cases needed for React to see the change
     fieldElm.value = fieldRule.value;
     fieldElm.dispatchEvent(new Event('change', {'view': window,'bubbles': true}));
   } else if (fieldElm.type === 'select-multiple') {
+    fieldElm.dispatchEvent(new Event('focus', {bubbles: true})); // In some cases needed for React to see the change
     const value = (fieldRule.value === null) ? [] : fieldRule.value;
     if (!Array.isArray(value)) {
       console.error("The form element is a select-multiple and thus the value " +
@@ -72,9 +74,11 @@ function fillField(fieldElm, fieldRule) {
     if (wantChecked === fieldElm.checked) return;
     fieldElm.dispatchEvent(new MouseEvent('click', {'view': window,'bubbles': true}));
   } else if (fieldRule.textContent) {
+    fieldElm.dispatchEvent(new Event('focus', {bubbles: true})); // In some cases needed for React to see the change
     fieldElm.textContent = fieldRule.textContent; // labels, text elements
     fieldElm.dispatchEvent(new Event('input', {bubbles: true})); // Notify e.g. React of the changed value
  } else { // Typically a text <input>
+    fieldElm.dispatchEvent(new Event('focus', {bubbles: true})); // In some cases needed for React to see the change
     fieldElm.value = fieldRule.value;
     fieldElm.dispatchEvent(new Event('input', {bubbles: true})); // Notify e.g. React of the changed value
   }

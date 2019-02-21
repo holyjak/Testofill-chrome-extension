@@ -28,6 +28,7 @@ Tip: You need to enable the extension in Incognito mode on the Extensions page i
 Security tip: Only allow the plugin access to the sites where you use it - see "Add or remove access to a specific site" at https://support.google.com/chrome_webstore/answer/2664769
 
 Change log:
+  * 0.13 - Improve React support (focus elements before changing them - works better with some components)
   * 0.12 - Save forms ignores iframes instead of being confused by them
   * 0.11 - Save forms accepts fields that have only id and no name
   * 0.10 - Full support for React forms (v16)
@@ -173,6 +174,7 @@ manually set the label, using the `textContent` attribute. Ex.:
 ChangeLog
 ----------------
 
+- 2019-02-21 v0.13 - Improve React support (focus elements before changing them - works better with some components)
 - 2019-02-20 v0.12 - Save forms ignores iframes instead of being confused by them
 - 2019-02-19 v0.11 Save forms accepts fields that have only id and no name
 - 2019-02-19

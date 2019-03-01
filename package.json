@@ -11,5 +11,10 @@
     "grunt-contrib-watch": "~1.1.0",
     "chai": "~4.2.0",
     "chance": "~1.0.18"
+  },
+  "scripts": {
+    "development": "grunt development",
+    "watch": "grunt watch",
+    "build": "grunt"
   }
 }

@@ -88,19 +88,14 @@ function ctxMenuFillFormHandler(tab) {
 }
 
 function ctxMenuSaveFormHandler(tab) {
-  sendMessageToContentScript(tab, "save_form", {}, extractedForms => mergeIntoOptions(tab, extractedForms));
+  sendMessageToContentScript(tab, "save_form", { tabUrl: tab.url }, forms => mergeIntoOptions(tab, forms));
 }
 
 /** Merge the given map with the options.forms map. */
-function mergeIntoOptions(tab, extractedForms) {
-  const forms = extractedForms.forms;
+function mergeIntoOptions(tab, forms) {
+  if (!forms) return;
   const url = tab.url;
 
-  if (url !== extractedForms.url) {
-    // Skip because filling in forms does not handle iframes (yet?)
-    console.log(`Skipping ${forms.length} extracted from (iframe?) ${extractedForms.url} != tab url ${url}`);
-    return;
-  }
   chrome.storage.local.get('testofill.rules', function(items) {
     if (typeof chrome.runtime.lastError !== "undefined") {
       return; // TODO report error; how?

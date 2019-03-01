@@ -25,9 +25,10 @@ It is also possible to create rules automatically from a filled form and adjust 
 
 Tip: You need to enable the extension in Incognito mode on the Extensions page if you want to be able to use it when Incognito.
 
-Security tip: Only allow the plugin access to the sites where you use it - see "Add or remove access to a specific site" at https://support.google.com/chrome_webstore/answer/2664769
+Security tip: Only allow the plugin access to the sites where you use it - see "Add or remove access to a specific site" at https://support.google.com/chrome_webstore/answer/2664769 (right click - Manage Extensions - under Permissions, change "On all sites" to "On click" (for the current tab only) or "On specific sites").
 
 Change log:
+  * 0.14 - Fix to really ignore iframes, which broke "save forms"
   * 0.13 - Improve React support (focus elements before changing them - works better with some components)
   * 0.12 - Save forms ignores iframes instead of being confused by them
   * 0.11 - Save forms accepts fields that have only id and no name
@@ -174,6 +175,7 @@ manually set the label, using the `textContent` attribute. Ex.:
 ChangeLog
 ----------------
 
+- Newer changes - see above in the Web Store info part.
 - 2019-02-21 v0.13 - Improve React support (focus elements before changing them - works better with some components)
 - 2019-02-20 v0.12 - Save forms ignores iframes instead of being confused by them
 - 2019-02-19 v0.11 Save forms accepts fields that have only id and no name

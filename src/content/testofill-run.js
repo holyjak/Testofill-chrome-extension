@@ -108,9 +108,14 @@ function assertFieldType(fieldType, fieldRule, expectedType) {
  * Find all forms on the page, create query+value pair for each relevant field,
  * return an array of {name: .., fields: [..]} that can be merged into the existing config.
  */
-function makeTestofillJsonFromPageForms() {
+function makeTestofillJsonFromPageForms(tabUrl) {
   var excludedTypes = ['button', 'submit', 'reset', 'form', 'hidden'];
   var debugStrs = [];
+
+  if (tabUrl != document.location.toString()) {
+    console.debug("document.location != tabUrl", { loc: document.location.toString(), tabUrl});
+    return null; // skip forms in iframes etc.
+  }
 
   var formListJson =
     _.map(document.forms, function(form, idx){
@@ -162,7 +167,7 @@ function makeTestofillJsonFromPageForms() {
   console.log(`Testofill: Report for Save forms of ${formsNonempty.length} out of ${document.forms.length} forms at ${document.location.toString()}: `, debugStrs, "See https://github.com/holyjak/Testofill-chrome-extension/wiki/Help:-Save-forms-saved-input-from-0-forms for help");
 
   // A single page may contain multiple documents due to iframes so make it possible to distinguish them:
-  return {url: document.location.toString(), forms: formsNonempty};
+  return formsNonempty;
 }
 
 function makeQueryFrom(input) {
@@ -203,7 +208,8 @@ function handleMessage(message, sender, sendResponseFn){
     var ruleSet = payload;
     fillForms(ruleSet);
   } else if (message.id === "save_form") {
-    const extractedForms = makeTestofillJsonFromPageForms();
+    const { tabUrl } = payload;
+    const extractedForms = makeTestofillJsonFromPageForms(tabUrl);
     sendResponseFn(extractedForms);
   } else if (message.id === "extracted_forms_saved") {
     alert("Input from " + payload.count + " forms has been saved for " + payload.url +

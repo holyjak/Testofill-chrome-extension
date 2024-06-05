@@ -1,21 +1,23 @@
 {
   "name": "Testofill, Form Filler for Testers",
-  "version": "0.14.0",
-  "manifest_version": 2,
-  "author": "Jakub Holy <https://blog.jakubholy.net/>",
+  "version": "0.15.0",
+  "manifest_version": 3,
+  "author": "Jakub Holy <https://holyjak.cz/>",
   "icons": {
     "16": "autofill_16x16.png"
   },
   "description": "Enable testers to fill forms automatically/on-demand based on (sets of) rules they wrote / captured.",
   "permissions": [
     "activeTab",
-    "storage",
     "tabs",
-    "contextMenus",
-    "http://*/*",
-    "https://*/*"
+    "storage",
+    "scripting",
+    "contextMenus"
   ],
-  "browser_action": {
+  "optional_host_permissions": [
+    "*://*/*"
+  ],
+  "action": {
     "default_title": "Testofill",
     "default_icon": {
       "19": "autofill_16x16.png"
@@ -34,7 +36,8 @@
   ],
   "options_page": "options.html",
   "background": {
-    "scripts": ["events.js"],
-    "persistent": false
+    "service_worker": "service_worker.js",
+    "type": "module"
+
   }
 }

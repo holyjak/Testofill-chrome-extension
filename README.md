@@ -28,6 +28,7 @@ Tip: You need to enable the extension in Incognito mode on the Extensions page i
 Security tip: Only allow the plugin access to the sites where you use it - see "Add or remove access to a specific site" at https://support.google.com/chrome_webstore/answer/2664769 (right click - Manage Extensions - under Permissions, change "On all sites" to "On click" (for the current tab only) or "On specific sites").
 
 Change log:
+  * 0.15 - Update to the Extension Manifest v3, as required by Chrome
   * 0.14 - Fix to really ignore iframes, which broke "save forms"
   * 0.13 - Improve React support (focus elements before changing them - works better with some components)
   * 0.12 - Save forms ignores iframes instead of being confused by them

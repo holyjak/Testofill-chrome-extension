@@ -1,8 +1,8 @@
 /** Entry point for initializing the matching ruleSets select for the given tab */
 function renderForTab(tab) {
-  findMatchingRules(tab.url, function(ruleSets) {
+  findMatchingRules(tab.url, function (ruleSets) {
     renderRuleSetSelection(ruleSets);
-    document.querySelector('#ruleSetList').addEventListener('change', function(evt){
+    document.querySelector('#ruleSetList').addEventListener('change', function (evt) {
       handleRuleSetSelected(evt, tab, ruleSets);
     });
   });
@@ -10,16 +10,15 @@ function renderForTab(tab) {
 
 /* Find defined ruleSets matching this URL */
 function findMatchingRules(currentUrl, ruleSetsCallback) {
-  chrome.runtime.getBackgroundPage(function(eventsWin){
-    eventsWin.findMatchingRules(currentUrl, ruleSetsCallback);
-  });
+  chrome.runtime.sendMessage({ id: 'findMatchingRules', payload: currentUrl })
+    .then(ruleSetsCallback);
 }
 /** Fill in the rule set <select> with the given ruleSets */
 function renderRuleSetSelection(ruleSets) {
   var ruleSetList = document.getElementById("ruleSetList");
   ruleSetList.size = ruleSets.length;
 
-  ruleSets.forEach(function(ruleSet, idx){
+  ruleSets.forEach(function (ruleSet, idx) {
     var label = ruleSet.name + (ruleSet.doc ? " - " + ruleSet.doc : "");
     ruleSetList.add(new Option(label, idx));
   });
@@ -33,23 +32,24 @@ function handleRuleSetSelected(evt, tab, ruleSets) {
 
   var ruleSet = ruleSets[ruleSetIdx];
 
-  chrome.runtime.getBackgroundPage(function(bp){
-    bp.sendMessageToContentScript(tab, "fill_form", ruleSet);
-    window.close();
-  });
+  chrome.runtime.sendMessage({ 
+    id: 'sendMessageToContentScript', 
+    payload: {tabId: tab.id, messageId: "fill_form", messageBody: ruleSet}
+  })
+    .then((_resp) => { window.close(); });
 }
 
 // Trigger renderForTab when loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   var tabIdFromUrl = window.location.hash.substring(1);
   if (tabIdFromUrl) {
     // Opened from ctx menu
-    chrome.tabs.get(parseInt(tabIdFromUrl), function(tab) {
+    chrome.tabs.get(parseInt(tabIdFromUrl), function (tab) {
       renderForTab(tab);
     });
   } else {
     // Opened from browserAction icon
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       var tab = tabs[0];
       renderForTab(tab);
     });

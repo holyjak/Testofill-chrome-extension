@@ -8,7 +8,7 @@
 //---------------------------------------------------------------- reusable: ruleSets, content, storage
 /* Get the rules and try to apply them to this page, if matched */
 function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {
-  chrome.storage.local.get('testofill.rules', function (items) {
+  chrome.storage.local.get('testofill.rules').then((items) => {
     if (typeof chrome.runtime.lastError !== "undefined") {
       console.log("ERROR Run.js: Rules loading failed", chrome.runtime.lastError);
       return;
@@ -179,7 +179,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 });
 
 /* Only triggered if there is 0-1 ruleSets (i.e. of there is no popup win). */
-chrome.action.onClicked.addListener(function (tab) {
+chrome.action.onClicked.addListener((tab) => {
   findMatchingRules(tab.url, function (ruleSets) {
     sendMessageToContentScript(tab, "fill_form", ruleSets[0]);
   });
@@ -214,3 +214,17 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 
   }
 });
+
+//---------------------------------------------------------------- message handling
+function handleMessage({ id, payload }, _sender, sendResponse) {
+  if (id === 'saveRulesToStorage') {
+    saveRulesToStorage(payload, sendResponse);
+  } else if (id === 'findMatchingRules') {
+    findMatchingRules(payload, sendResponse);
+  } else if (id === 'sendMessageToContentScript') {
+    const { tabId, messageId, messageBody } = payload;
+    sendMessageToContentScript({id: tabId}, messageId, messageBody);
+  } else {
+    console.error("[WORKER] Unknown message id: ", id);
+  }
+}

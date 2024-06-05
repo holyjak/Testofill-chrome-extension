@@ -23,7 +23,7 @@ module.exports = function(grunt) {
     },
     concat: {
        content: {
-          src: ['lib/shared/*.js','lib/content/*.js','src/content/*.js'],
+          src: ['lib/content/*.js','src/content/*.js'],
           dest: 'src/extension/generated/testofill-content-packed.js'
        }
 //        ,extension: {

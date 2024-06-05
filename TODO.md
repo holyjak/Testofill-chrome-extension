@@ -8,11 +8,16 @@ See https://developer.chrome.com/extensions/activeTab .
 
 =>
 
-* Consider making `tabs` optional (=> not being able to update browser action icon - but it does not work well anyway)
+* Consider making `tabs` optional =>
+  * being able to update browser action icon when accessing a url - but it does not work well anyway
+  * not being able to auto-fill until the ext. has been manually invoked at least once in the tab - 
+    could add a shortcut such as Alt+F to fill in, then it would be auto - see https://developer.chrome.com/docs/extensions/reference/api/commands
+    Check https://github.com/GoogleChrome/chrome-extensions-samples/blob/main/functional-samples/sample.optional_permissions/newtab.js for
+    checking, requesting permissions
 
 activeTab gives you:
 
-* Call tabs.executeScript or tabs.insertCSS on that tab.
+* Call runtime.executeScript or runtime.insertCSS on that tab.
 * Get the URL, title, and favicon for that tab via an API that returns a tabs.Tab object (essentially, activeTab grants the tabs permission temporarily).
 
 ## Generative

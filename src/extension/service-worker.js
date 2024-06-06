@@ -1,3 +1,5 @@
+import * as rs from "./rules-store.js";
+
 /** 
  * An environment that lives independent of any other window or tab,
  * which can observe and act in response to events. In particular, it
@@ -7,29 +9,8 @@
 
 //---------------------------------------------------------------- reusable: ruleSets, content, storage
 /* Get the rules and try to apply them to this page, if matched */
-function findMatchingRules(currentUrl, ruleSetsCallback, callIfNone) {
-  chrome.storage.local.get('testofill.rules').then((items) => {
-    if (typeof chrome.runtime.lastError !== "undefined") {
-      console.log("ERROR Run.js: Rules loading failed", chrome.runtime.lastError);
-      return;
-    }
-
-    var rules = items['testofill.rules'];
-    var matchFound = false;
-
-    if (typeof rules !== 'undefined' && typeof rules.forms !== 'undefined') {
-      for (var urlRE in rules.forms) {
-        if (currentUrl.match(new RegExp(urlRE))) {
-          matchFound = true;
-          ruleSetsCallback(rules.forms[urlRE]);
-        }
-      }
-    }
-
-    if (callIfNone && !matchFound) {
-      ruleSetsCallback([]);
-    }
-  });
+async function findMatchingRules(currentUrl, ruleSetsCallback, _callIfNone) {
+  rs.findMatchingRules(currentUrl).then(ruleSetsCallback);
 }
 
 function sendMessageToContentScript(tab, messageId, payload, responseCallback) {
@@ -161,6 +142,7 @@ function triggerAutofillingIfEnabled(tab, ruleSets) {
  */
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   if (changeInfo.status !== "complete") return;
+  if (tab.url.startsWith("chrome://")) return;
 
   const url = tab.url;
   // Default badge/popup if no matching rulesets
@@ -219,12 +201,14 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 function handleMessage({ id, payload }, _sender, sendResponse) {
   if (id === 'saveRulesToStorage') {
     saveRulesToStorage(payload, sendResponse);
-  } else if (id === 'findMatchingRules') {
-    findMatchingRules(payload, sendResponse);
   } else if (id === 'sendMessageToContentScript') {
     const { tabId, messageId, messageBody } = payload;
-    sendMessageToContentScript({id: tabId}, messageId, messageBody);
+    sendMessageToContentScript({ id: tabId }, messageId, messageBody);
   } else {
     console.error("[WORKER] Unknown message id: ", id);
   }
+}
+
+if (!chrome.runtime.onMessage.hasListeners()) {
+  chrome.runtime.onMessage.addListener(handleMessage);
 }

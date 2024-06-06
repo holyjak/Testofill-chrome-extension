@@ -24,7 +24,7 @@ function showError(message) {
 }
 
 function saveToStorage(json) { // see also events.js: mergeIntoOptions()
-  chrome.runtime.sendMessage({ id: 'saveRulesToStorage', payload: json })
+  chrome.runtime.sendMessage({ id: 'saveRulesToStorage', payload: json }) // FIXME DIY
     .then((error) => {
       if (typeof error === 'undefined') {
         showStatus("Options Saved.");
@@ -40,7 +40,6 @@ function save_options(editor) {
 }
 
 function restore_options(editor) {
-
   var exampleJson = {
     "forms": {
       "duckduckgo.com": [

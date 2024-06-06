@@ -14,7 +14,7 @@
     "scripting",
     "contextMenus"
   ],
-  "optional_host_permissions": [
+  "host_permissions": [
     "*://*/*"
   ],
   "action": {
@@ -36,7 +36,7 @@
   ],
   "options_page": "options.html",
   "background": {
-    "service_worker": "service_worker.js",
+    "service_worker": "service-worker.js",
     "type": "module"
 
   }

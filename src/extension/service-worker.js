@@ -30,19 +30,7 @@ function sendMessageToContentScript(tab, messageId, payload, responseCallback) {
  * @param rules {fn} function to all; params: error {optional} - error message upon failure
  */
 function saveRulesToStorage(rules, responseCallback) {
-  chrome.storage.local.set({ 'testofill.rules': rules }, function () {
-    if (typeof chrome.runtime.lastError === "undefined") {
-      responseCallback();
-    } else {
-      // F.ex. due to {message: "QUOTA_BYTES_PER_ITEM quota exceeded"} // 4kB
-      var error = chrome.runtime.lastError.message + " when trying to save " +
-        JSON.stringify(rules).length + 'testofill.rules'.length + " B";
-      console.log("FAILED to store rules due to %s; rules: ",
-        error,
-        rules);
-      responseCallback(error);
-    }
-  });
+  rs.saveRulesToStorage(rules).then(() => responseCallback()).catch((error) => responseCallback(error));
 }
 //---------------------------------------------------------------- listeners
 
@@ -199,9 +187,7 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 
 //---------------------------------------------------------------- message handling
 function handleMessage({ id, payload }, _sender, sendResponse) {
-  if (id === 'saveRulesToStorage') {
-    saveRulesToStorage(payload, sendResponse);
-  } else if (id === 'sendMessageToContentScript') {
+  if (id === 'sendMessageToContentScript') {
     const { tabId, messageId, messageBody } = payload;
     sendMessageToContentScript({ id: tabId }, messageId, messageBody);
   } else {

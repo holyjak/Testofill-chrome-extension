@@ -1,7 +1,7 @@
 /* Get the rules and try to apply them to this page, if matched */
 export async function findMatchingRules(currentUrl) {
   const items = await chrome.storage.local.get('testofill.rules');
-  
+
   if (typeof chrome.runtime.lastError !== "undefined") {
     console.log("ERROR Run.js: Rules loading failed", chrome.runtime.lastError);
     throw new Error(`ERROR Run.js: Rules loading failed: ${chrome.runtime.lastError}`);
@@ -20,4 +20,19 @@ export async function findMatchingRules(currentUrl) {
   }
 
   return [];
+}
+
+export async function saveRulesToStorage(rules) {
+  await chrome.storage.local.set({ 'testofill.rules': rules });
+  if (typeof chrome.runtime.lastError === "undefined") {
+    return true;
+  } else {
+    // F.ex. due to {message: "QUOTA_BYTES_PER_ITEM quota exceeded"} // 4kB
+    var error = chrome.runtime.lastError.message + " when trying to save " +
+      JSON.stringify(rules).length + 'testofill.rules'.length + " B";
+    console.log("FAILED to store rules due to %s; rules: ",
+      error,
+      rules);
+    throw new Error(error);
+  }
 }

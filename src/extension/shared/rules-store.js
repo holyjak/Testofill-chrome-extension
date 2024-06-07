@@ -15,6 +15,8 @@ export async function findMatchingRules(currentUrl) {
       if (currentUrl.match(new RegExp(urlRE))) {
         matchFound = true;
         return rules.forms[urlRE];
+      } else {
+        //console.debug("No match for %s in %s", currentUrl, urlRE);
       }
     }
   }

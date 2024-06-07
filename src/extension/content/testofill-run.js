@@ -164,7 +164,7 @@ function makeTestofillJsonFromPageForms(tabUrl) {
       " forms were skipped for they had no relevant fields");
   }
 
-  console.log(`Testofill: Report for Save forms of ${formsNonempty.length} out of ${document.forms.length} forms at ${document.location.toString()}: `, debugStrs, "See https://github.com/holyjak/Testofill-chrome-extension/wiki/Help:-Save-forms-saved-input-from-0-forms for help");
+  console.log(`Testofill: Saved ${formsNonempty.length} form(s) out of ${document.forms.length} at ${document.location.toString()}: `, debugStrs, "See https://github.com/holyjak/Testofill-chrome-extension/wiki/Help:-Save-forms-saved-input-from-0-forms for help");
 
   // A single page may contain multiple documents due to iframes so make it possible to distinguish them:
   return formsNonempty;

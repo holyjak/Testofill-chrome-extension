@@ -1,6 +1,6 @@
 {
   "name": "Testofill, Form Filler for Testers",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "manifest_version": 3,
   "author": "Jakub Holy <https://holyjak.cz/>",
   "icons": {
@@ -9,31 +9,36 @@
   "description": "Enable testers to fill forms automatically/on-demand based on (sets of) rules they wrote / captured.",
   "permissions": [
     "activeTab",
+    "scripting",
     "tabs",
     "storage",
-    "scripting",
     "contextMenus"
   ],
-  "host_permissions": [
-    "*://*/*"
-  ],
-  "action": {
-    "default_title": "Testofill",
-    "default_icon": {
-      "19": "autofill_16x16.png"
-    }
-	},
+  "optional_permissions": ["tabs"],
   "content_scripts": [
     {
       "matches" : [
         "http://*/*",
         "https://*/*"
       ],
-      "js": ["generated/testofill-content-packed.js"],
+      "js": [
+        "content/lib/sizzle-20140125.min.js",
+        "content/lib/underscore-min.js",
+        "content/lib/chance.min.js",
+        "content/generative.js",
+        "content/testofill-run.js"
+    ],
       "run_at": "document_idle",
       "all_frames": true
     }
   ],
+
+  "action": {
+    "default_title": "Testofill",
+    "default_icon": {
+      "19": "autofill_16x16.png"
+    }
+	},
   "options_page": "options.html",
   "background": {
     "service_worker": "service-worker.js",

@@ -1,12 +1,28 @@
 # TODO
 
+## WIP: Fewer permissions
+
+* Inject script dynamically when integr./sendMessage [after clicking button / triggering command] fails due to conn. error
+  (inst. of static inject on all pages) => get fill on demand working
+  * After error => will only be injected once
+  * activeTab allows us to injectScript, after the use explicitly triggered the plugin
+  * **UPDATE**: Leverage https://github.com/fregante/webext-dynamic-content-scripts/blob/main/how-to-add-github-enterprise-support-to-web-extensions.md
+* Clean up code (uncommited changes)
+* TBD How to ask for permission for auto-inject on all hosts => auto-fill?
+* Look at making tabs optional too 
+
 ## Permissions
 
-Using the `activeTab` permission does not pop up warning to users when installing about access to all possible; only grants access after the user invokes the extension and until closed/navigated away - contrary to `tabs`.
+Using the `activeTab` permission does not pop up warning to users when installing about access to all possible; only grants access after the user invokes the extension and until closed/navigated away.
 
-See https://developer.chrome.com/extensions/activeTab .
+Applying a content script to `*` (or having `host_permissions: ..*..`) shows a warning about being able to  _access all data on all pages_.
+
+(The `tabs` gives a warning about having access to the browsing history.)
 
 =>
+
+Replace the statically injected content script with one injected on demand, after the user
+triggers the extension
 
 * Consider making `tabs` optional =>
   * being able to update browser action icon when accessing a url - but it does not work well anyway

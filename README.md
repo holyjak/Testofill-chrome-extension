@@ -253,6 +253,11 @@ Form filling is implemented in the content script
 5. Access http://localhost:1111/test.html#two - here we have two rulesets so invoking Testofill should show a popup with their names
 6. Similarly for http://localhost:1111/test-react.html
 
+### Permission check
+
+In Chrome, at `chrome://extensions/`, click [Pack extension], select `./src/extension` and the stored `extension.pem`. Then drag and drop the created .crx to that page to install it and see what permission warnings it would display. (The ext. will be unusable - use [Load unpacked] for that)
+
 ### Publication
 
-Run `grunt` then go to [Chrome Dev Dashboard](https://chrome.google.com/webstore/developer/edit/pkgdgajoinhkfldibdaledjikboognnl) for the plugin and upload the generated `./Testofill-dist.zip`.
+1. In Chrome, at `chrome://extensions/`, click [Pack extension], select `./src/extension` and the stored `extension.pem`.
+2. Go to [Chrome Dev Dashboard](https://chrome.google.com/webstore/developer/edit/pkgdgajoinhkfldibdaledjikboognnl) for the plugin and upload the generated `.crx`.

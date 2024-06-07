@@ -15,12 +15,10 @@
     "contextMenus"
   ],
   "optional_permissions": ["tabs"],
+  "optional_host_permissions": ["*://*/*"],
   "content_scripts": [
     {
-      "matches" : [
-        "http://*/*",
-        "https://*/*"
-      ],
+      "matches" : ["https://holyjak.cz/*"],
       "js": [
         "content/lib/sizzle-20140125.min.js",
         "content/lib/underscore-min.js",

@@ -1,5 +1,8 @@
 import * as rs from "./shared/rules-store.js";
 import * as integr from "./shared/integration.js";
+import { addPermissionToggle } from './lib/bundled-npm-deps.js';
+
+addPermissionToggle();
 
 /** 
  * An environment that lives independent of any other window or tab,

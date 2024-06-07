@@ -244,6 +244,16 @@ Form filling is implemented in the content script
 
 [`popup.js`](src/popup.js) defines the selection popup that opens when multiple rule sets match the current URL and that triggers form filling when one is selected.
 
+### Initial setup
+
+Run `npm install`, then `npm run bundle-deps`.
+
+### Note on permissions and libs
+
+We don't want to ask for access to all sites, rather opting for the user to manually enable the plugin for each site of interest. This is done by the module `webext-permission-toggle`, which adds to the extension's menu, next to Options, a toggle to enable it for a particular domain. Then, the inclusion of `webext-dynamic-content-scripts` will automatically register our content script (from the manifest) with that domain.
+
+Both are installed as npm modules and need to be bundled with the extension via `npm run bundle-deps`.
+
 ### Manual testing
 
 1. Run `cd test/; python -m SimpleHTTPServer 1111`
@@ -259,5 +269,6 @@ In Chrome, at `chrome://extensions/`, click [Pack extension], select `./src/exte
 
 ### Publication
 
-1. In Chrome, at `chrome://extensions/`, click [Pack extension], select `./src/extension` and the stored `extension.pem`.
-2. Go to [Chrome Dev Dashboard](https://chrome.google.com/webstore/developer/edit/pkgdgajoinhkfldibdaledjikboognnl) for the plugin and upload the generated `.crx`.
+1. Run `npm run bundle-deps` to refresh `extension/lib/bundled-npm-deps.js` if necessary
+2. In Chrome, at `chrome://extensions/`, click [Pack extension], select `./src/extension` and the stored `extension.pem`.
+3. Go to [Chrome Dev Dashboard](https://chrome.google.com/webstore/developer/edit/pkgdgajoinhkfldibdaledjikboognnl) for the plugin and upload the generated `.crx`.

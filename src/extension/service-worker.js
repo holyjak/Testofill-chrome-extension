@@ -1,4 +1,5 @@
-import * as rs from "./rules-store.js";
+import * as rs from "./shared/rules-store.js";
+import * as integr from "./shared/integration.js";
 
 /** 
  * An environment that lives independent of any other window or tab,
@@ -14,15 +15,7 @@ async function findMatchingRules(currentUrl, ruleSetsCallback, _callIfNone) {
 }
 
 function sendMessageToContentScript(tab, messageId, payload, responseCallback) {
-  // Beware - there is an issue here:
-  // We re-insert the script every time, even if already inserted (could lead to duplicate listeners etc.)
-  // Could be fixed by sending msg first and only exec. script if it fails (b/c not inserted yet).
-  // Notice that when the plugin is updated, it also needs to re-insert the content script (communication will fail)
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    files: ["generated/testofill-content-packed.js"]
-  })
-    .then(() => chrome.tabs.sendMessage(tab.id, { id: messageId, payload: payload }, responseCallback));
+  integr.sendMessageToContentScript(tab, messageId, payload).then(responseCallback);
 }
 
 /**
@@ -131,6 +124,7 @@ function triggerAutofillingIfEnabled(tab, ruleSets) {
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   if (changeInfo.status !== "complete") return;
   if (tab.url.startsWith("chrome://")) return;
+  if (tab.url.startsWith("chrome-extension://")) return;
 
   const url = tab.url;
   // Default badge/popup if no matching rulesets
@@ -184,17 +178,3 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 
   }
 });
-
-//---------------------------------------------------------------- message handling
-function handleMessage({ id, payload }, _sender, sendResponse) {
-  if (id === 'sendMessageToContentScript') {
-    const { tabId, messageId, messageBody } = payload;
-    sendMessageToContentScript({ id: tabId }, messageId, messageBody);
-  } else {
-    console.error("[WORKER] Unknown message id: ", id);
-  }
-}
-
-if (!chrome.runtime.onMessage.hasListeners()) {
-  chrome.runtime.onMessage.addListener(handleMessage);
-}

@@ -1,4 +1,5 @@
-import * as rs from "./rules-store.js";
+import * as rs from "./shared/rules-store.js";
+import * as integr from "./shared/integration.js";
 
 /** Entry point for initializing the matching ruleSets select for the given tab */
 function renderForTab(tab) {
@@ -33,11 +34,9 @@ function handleRuleSetSelected(evt, tab, ruleSets) {
 
       var ruleSet = ruleSets[ruleSetIdx];
 
-      chrome.runtime.sendMessage({ // FIXME DIY
-        id: 'sendMessageToContentScript',
-        payload: { tabId: tab.id, messageId: "fill_form", messageBody: ruleSet }
-      })
-        .then((_resp) => { window.close(); });
+      integr.sendMessageToContentScript(tab, "fill_form", ruleSet)
+      .then((_resp) => { window.close(); })
+      .catch((_resp) => { window.close(); })
     }
 
 // Trigger renderForTab when loaded

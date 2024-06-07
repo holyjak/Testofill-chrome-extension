@@ -240,15 +240,15 @@ Development
 Form filling is implemented in the content script
 [`testofill-run.js`](src/testofill-run.js). See especially `fillForms` that finds fields matched by rules in a rule set and fills them via `fillField`, which applies a rule (its value, textContent etc.) to a field.
 
-[`events.js`](src/events.js) contains the crucial `findMatchingRules`, which gets rule sets from options, finds those matching the current URL, and calls the provided callback for them. Behavior of the context menu and badge icon are defined here as well.
+[`service_worker.js`](src/service_worker.js) contains the crucial `findMatchingRules`, which gets rule sets from options, finds those matching the current URL, and calls the provided callback for them. Behavior of the context menu and badge icon are defined here as well.
 
 [`popup.js`](src/popup.js) defines the selection popup that opens when multiple rule sets match the current URL and that triggers form filling when one is selected.
 
 ### Manual testing
 
 1. Run `cd test/; python -m SimpleHTTPServer 1111`
-2. Enable the plugin
-3. Copy and paste the ruleset into the plugin options (switch from Tree to Code view)
+2. Enable the plugin (in Extensions dev mode, do Load unpacked from src/extension/ after executing `grunt`)
+3. Copy and paste the ruleset from the web page into the plugin options (switch from Tree to Code view)
 4. Access http://localhost:1111/test.html#one - testofill should autofill the form, press [Reset] and compare, invoke Testofill manually
 5. Access http://localhost:1111/test.html#two - here we have two rulesets so invoking Testofill should show a popup with their names
 6. Similarly for http://localhost:1111/test-react.html

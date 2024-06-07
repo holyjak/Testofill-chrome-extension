@@ -1,4 +1,4 @@
-import * as rs from "./rules-store.js";
+import * as rs from "./shared/rules-store.js";
 // Options storage
 
 function showStatus(message, type) {

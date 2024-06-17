@@ -14,12 +14,12 @@ function fillForms(ruleSet) {
   if (typeof ruleSet === 'undefined') return;
 
   var unmatchedSelectors = [];
-  ruleSet.fields.forEach(function(field) {
+  ruleSet.fields.forEach(function (field) {
     var fieldElms = Sizzle(field.query);
     if (fieldElms.length === 0) {
       unmatchedSelectors.push(field);
     } else {
-      fieldElms.forEach(function(inputElm) {
+      fieldElms.forEach(function (inputElm) {
         fillField(inputElm, field);
       });
     }
@@ -27,8 +27,8 @@ function fillForms(ruleSet) {
 
   if (unmatchedSelectors.length > 0) {
     console.log("Warning: some fields matched nothing in the set named " +
-                ruleSet.name,
-                unmatchedSelectors);
+      ruleSet.name,
+      unmatchedSelectors);
   }
 
 }
@@ -36,7 +36,7 @@ function fillForms(ruleSet) {
 /* Apply rule to a field to fill it (exec. for each matching field, e.g. radio). */
 function fillField(fieldElm, fieldRule) {
   if (!_.isUndefined(fieldRule.generate)) {
-    var tmp = fieldRule.generate ;
+    var tmp = fieldRule.generate;
     fieldRule.value = parseTopGenExpr(fieldRule.generate);
     console.log("Gen random for field %s => %s, gen: %s", fieldRule.query, fieldRule.value, JSON.stringify(fieldRule.generate), fieldRule, tmp);
   }
@@ -44,43 +44,43 @@ function fillField(fieldElm, fieldRule) {
   if (fieldElm.type === 'checkbox') {
     assertFieldType(fieldElm.type, fieldRule, 'boolean');
     if (fieldElm.checked === Boolean(fieldRule.value)) return;
-    fieldElm.dispatchEvent(new MouseEvent('click', {'view': window,'bubbles': true}));
+    fieldElm.dispatchEvent(new MouseEvent('click', { 'view': window, 'bubbles': true }));
   } else if (fieldElm.type === 'select-one') { // FIXME reuse select-multi code
     assertFieldType(fieldElm.type, fieldRule, 'string');
     if (fieldElm.value === fieldRule.value) return;
-    fieldElm.dispatchEvent(new Event('focus', {bubbles: true})); // In some cases needed for React to see the change
+    fieldElm.dispatchEvent(new Event('focus', { bubbles: true })); // In some cases needed for React to see the change
     fieldElm.value = fieldRule.value;
-    fieldElm.dispatchEvent(new Event('change', {'view': window,'bubbles': true}));
+    fieldElm.dispatchEvent(new Event('change', { 'view': window, 'bubbles': true }));
   } else if (fieldElm.type === 'select-multiple') {
-    fieldElm.dispatchEvent(new Event('focus', {bubbles: true})); // In some cases needed for React to see the change
+    fieldElm.dispatchEvent(new Event('focus', { bubbles: true })); // In some cases needed for React to see the change
     const value = (fieldRule.value === null) ? [] : fieldRule.value;
     if (!Array.isArray(value)) {
       console.error("The form element is a select-multiple and thus the value " +
         "to fill in should be null or an array of 0+ values but it is not an array; " +
-                    "query: " + fieldRule.query + ", the value: ", value,
-                    "; the field: ", fieldElm);
+        "query: " + fieldRule.query + ", the value: ", value,
+        "; the field: ", fieldElm);
       return;
     }
-    for(var j = fieldElm.length - 1; j >= 0; j--) {
+    for (var j = fieldElm.length - 1; j >= 0; j--) {
       var multiOpt = fieldElm[j];
       multiOpt.selected = (value.indexOf(multiOpt.value) >= 0);
     }
-    fieldElm.dispatchEvent(new Event('change', {'view': window,'bubbles': true}));
+    fieldElm.dispatchEvent(new Event('change', { 'view': window, 'bubbles': true }));
   } else if (fieldElm.type === 'radio') {
     assertFieldType(fieldElm.type, fieldRule, 'string');
     console.assert(fieldRule.value !== null, `null is not supported for radio fields, you must choose a value; rule query=${fieldRule.query}`);
     // find the one with matching value or unset all:
     const wantChecked = (fieldElm.value === fieldRule.value);
     if (wantChecked === fieldElm.checked) return;
-    fieldElm.dispatchEvent(new MouseEvent('click', {'view': window,'bubbles': true}));
+    fieldElm.dispatchEvent(new MouseEvent('click', { 'view': window, 'bubbles': true }));
   } else if (fieldRule.textContent) {
-    fieldElm.dispatchEvent(new Event('focus', {bubbles: true})); // In some cases needed for React to see the change
+    fieldElm.dispatchEvent(new Event('focus', { bubbles: true })); // In some cases needed for React to see the change
     fieldElm.textContent = fieldRule.textContent; // labels, text elements
-    fieldElm.dispatchEvent(new Event('input', {bubbles: true})); // Notify e.g. React of the changed value
- } else { // Typically a text <input>
-    fieldElm.dispatchEvent(new Event('focus', {bubbles: true})); // In some cases needed for React to see the change
+    fieldElm.dispatchEvent(new Event('input', { bubbles: true })); // Notify e.g. React of the changed value
+  } else { // Typically a text <input>
+    fieldElm.dispatchEvent(new Event('focus', { bubbles: true })); // In some cases needed for React to see the change
     fieldElm.value = fieldRule.value;
-    fieldElm.dispatchEvent(new Event('input', {bubbles: true})); // Notify e.g. React of the changed value
+    fieldElm.dispatchEvent(new Event('input', { bubbles: true })); // Notify e.g. React of the changed value
   }
 }
 
@@ -113,28 +113,28 @@ function makeTestofillJsonFromPageForms(tabUrl) {
   var debugStrs = [];
 
   if (tabUrl != document.location.toString()) {
-    console.debug("document.location != tabUrl", { loc: document.location.toString(), tabUrl});
+    console.debug("document.location != tabUrl", { loc: document.location.toString(), tabUrl });
     return null; // skip forms in iframes etc.
   }
 
   var formListJson =
-    _.map(document.forms, function(form, idx){
+    _.map(document.forms, function (form, idx) {
       var formName = "TODO Name this " + form.id;
       var fieldElms = Sizzle(":input", form); // Find inputs and  textareas, selects, and buttons:
 
       var fieldElmsOnlyRelevant = _.filter(fieldElms, f =>
-            (f.name !== "" || f.id !== "") &&
-              f.value !== '' &&
-              excludedTypes.indexOf(f.type) === -1 &&
-              !f.disabled &&
-              !f.readonly
-          );
+        (f.name !== "" || f.id !== "") &&
+        f.value !== '' &&
+        excludedTypes.indexOf(f.type) === -1 &&
+        !f.disabled &&
+        !f.readonly
+      );
 
       var jsonFieldsAll = _.chain(fieldElmsOnlyRelevant)
-          .groupBy(f => f.name ? f.name : f.id) // group all radios with the same value into one array
-          .map(_.values) // turn {'fieldName': [field1, field2,...]} into just the array of fields (for that name/id)
-          .map(inputGrp => ({"query": makeQueryFrom(inputGrp[0]), "value": makeValueFrom(inputGrp)}))
-          .value();
+        .groupBy(f => f.name ? f.name : f.id) // group all radios with the same value into one array
+        .map(_.values) // turn {'fieldName': [field1, field2,...]} into just the array of fields (for that name/id)
+        .map(inputGrp => ({ "query": makeQueryFrom(inputGrp[0]), "value": makeValueFrom(inputGrp) }))
+        .value();
 
       // Filter out fields with no discernible value, ...
       var jsonFieldsOnlySet = _.filter(jsonFieldsAll, rule => rule.value !== undefined);
@@ -143,19 +143,19 @@ function makeTestofillJsonFromPageForms(tabUrl) {
       const formIdent = form.id || form.className || '';
       let msg = `Form #${idx} ${formIdent ? `{${formIdent}}` : ''}`;
       if (cntAllFields === 0) {
-          debugStrs.push(`${msg} has no fields`);
+        debugStrs.push(`${msg} has no fields`);
       } else {
         const cntIrrelevant = (fieldElms.length - fieldElmsOnlyRelevant.length);
         if (cntIrrelevant) msg += ` ${cntIrrelevant}/${cntAllFields} field(s) were irrelevant (no name or value / disabled / type such as hidden)`;
         const cntExcluded = (jsonFieldsAll.length - jsonFieldsOnlySet.length);
-        if (cntExcluded) msg += ` ${cntExcluded}/${cntAllFields} field(s) were exluded due to not having any value I could understand`;
-        debugStrs.push(`${msg}`);
+        if (cntExcluded) msg += ` ${cntExcluded}/${cntAllFields} field(s) were excluded due to not having any value I could understand`;
+        debugStrs.push(msg);
       }
 
-      return {"name": formName, "fields": jsonFieldsOnlySet};
+      return { "name": formName, "fields": jsonFieldsOnlySet };
     });
 
-  var formsNonempty = formListJson.filter(function(f) {
+  var formsNonempty = formListJson.filter(function (f) {
     return f.fields.length > 0;
   });
 
@@ -164,7 +164,7 @@ function makeTestofillJsonFromPageForms(tabUrl) {
       " forms were skipped for they had no relevant fields");
   }
 
-  console.log(`Testofill: Saved ${formsNonempty.length} form(s) out of ${document.forms.length} at ${document.location.toString()}: `, debugStrs, "See https://github.com/holyjak/Testofill-chrome-extension/wiki/Help:-Save-forms-saved-input-from-0-forms for help");
+  console.log(`Testofill: Saving ${formsNonempty.length} form(s) out of ${document.forms.length} at ${document.location.toString()}: `, debugStrs, "See https://github.com/holyjak/Testofill-chrome-extension/wiki/Help:-Save-forms-saved-input-from-0-forms for help");
 
   // A single page may contain multiple documents due to iframes so make it possible to distinguish them:
   return formsNonempty;
@@ -177,7 +177,7 @@ function makeQueryFrom(input) {
 function makeValueFrom(inputGrp) {
   if (inputGrp.length > 1) { // group of radio buttons
     return _.chain(inputGrp)
-      .where({checked: true})
+      .where({ checked: true })
       .pluck('value')
       .sample() // list to (the only one) single element or undefined
       .value(); // -> undefined if no match
@@ -198,7 +198,7 @@ function makeValueFrom(inputGrp) {
 //---------------------------------------------------------------------- LISTENERS
 
 /** Listen for message from the popup or ctx. menu with the selected ruleSet */
-function handleMessage(message, sender, sendResponseFn){
+function handleMessage(message, sender, sendResponseFn) {
   var fromExtension = !sender.tab;
   if (!fromExtension) return;
 

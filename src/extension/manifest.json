@@ -10,11 +10,13 @@
   "permissions": [
     "activeTab",
     "scripting",
-    "tabs",
     "storage",
-    "contextMenus"
+    "contextMenus",
+
+
+    "tabs"
   ],
-  "optional_permissions": ["tabs"],
+  "optional_permissions": [],
   "optional_host_permissions": ["*://*/*"],
   "content_scripts": [
     {

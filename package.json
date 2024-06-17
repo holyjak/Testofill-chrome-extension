@@ -13,7 +13,7 @@
     "underscore": "~1.9.1"
   },
   "scripts": {
-    "bundle-deps": "esbuild --bundle src/fake-entrypoint4esbuild.js --outfile=src/extension/lib/bundled-npm-deps.js --format=esm"
+    "bundle-deps": "esbuild --bundle src/bundled-npm-deps-entrypoint.js --outfile=src/extension/lib/bundled-npm-deps.js --format=esm"
   },
   "dependencies": {
     "webext-dynamic-content-scripts": "^10.0.1",

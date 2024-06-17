@@ -2,16 +2,16 @@
 
 ## WIP: Fewer permissions
 
-* Inject script dynamically when integr./sendMessage [after clicking button / triggering command] fails due to conn. error
-  (inst. of static inject on all pages) => get fill on demand working
-  * After error => will only be injected once
-  * activeTab allows us to injectScript, after the use explicitly triggered the plugin
-  * **UPDATE**: Leverage https://github.com/fregante/webext-dynamic-content-scripts/blob/main/how-to-add-github-enterprise-support-to-web-extensions.md
-* Clean up code (uncommited changes)
-* TBD How to ask for permission for auto-inject on all hosts => auto-fill?
-* Look at making tabs optional too 
+* DONE
+  * Added webext perm. toggle and dyn. content script injection libs,
+    removed the * host permissions. - see https://github.com/fregante/webext-dynamic-content-scripts/blob/main/how-to-add-github-enterprise-support-to-web-extensions.md
+* TBD
+  * Better info when user tries to use the addon but domain not allowed
+  * Has to trigger action twice, even when perms granted - b/c granting
+    async triggers the content script injection, which we must wait for
+  * See if we can make the `tabs` permission (=> "all browsing hist.") optional
 
-## Permissions
+## Permissions [OUTDATED]
 
 Using the `activeTab` permission does not pop up warning to users when installing about access to all possible; only grants access after the user invokes the extension and until closed/navigated away.
 

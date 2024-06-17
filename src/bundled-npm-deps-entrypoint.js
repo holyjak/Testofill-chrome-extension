@@ -1,5 +1,5 @@
-// Dummy entrypoint for esbuild to create the bundle we need for our
-// service worker. I'm sure there are better ways to do this...
+// Entrypoint for esbuild to create a bundle of npm dependencies we need for our
+// service worker.
 
 /* This import will run a fn that hooks it into the system so that when 
  * the user gives access permission for a domain, it will automatically inject

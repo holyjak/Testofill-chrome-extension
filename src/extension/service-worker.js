@@ -18,7 +18,8 @@ async function findMatchingRules(currentUrl, ruleSetsCallback, _callIfNone) {
 }
 
 function sendMessageToContentScript(tab, messageId, payload, responseCallback) {
-  integr.sendMessageToContentScript(tab, messageId, payload).then(responseCallback);
+  integr.sendMessageToContentScript(tab, messageId, payload)
+    .then(x => { if (x) responseCallback(x); });
 }
 
 /**
@@ -32,7 +33,11 @@ function saveRulesToStorage(rules, responseCallback) {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ listeners:menu
 
-function ctxMenuHandler(info, tab) {
+async function ctxMenuHandler(info, tab) {
+  if (!await integr.ensureDomainPermission(tab)) {
+    console.error("Aborting, permissions to access the current domain not granted");
+    return;
+  }
   if (info.menuItemId === "fill_form") {
     ctxMenuFillFormHandler(tab);
   } else { // save_form
@@ -62,15 +67,20 @@ function ctxMenuSaveFormHandler(tab) {
 
 /** Merge the given map with the options.forms map. */
 function mergeIntoOptions(tab, forms) {
-  if (!forms) return;
   const url = tab.url;
+  if (!forms) {
+    sendMessageToContentScript(tab, 'extracted_forms_save_failed',
+      { url: url, count: 0, error: 'No forms data provided?!' });
+    return;
+  }
 
   chrome.storage.local.get('testofill.rules', function (items) {
     if (typeof chrome.runtime.lastError !== "undefined") {
-      return; // TODO report error; how?
+      console.error("Error loading rules from storage: " + chrome.runtime.lastError.message);
+      return; // TODO report the error to the user via the popup?
     }
 
-    var rules = items['testofill.rules'];
+    const rules = items['testofill.rules'];
 
     // data sanitization
     if (typeof rules === "undefined") {
@@ -83,7 +93,7 @@ function mergeIntoOptions(tab, forms) {
     }
 
     // data merging
-    var existingUrlForms = rules.forms[url];
+    const existingUrlForms = rules.forms[url];
     rules.forms[url] = existingUrlForms.concat(forms);
 
     saveRulesToStorage(rules, function (error) {
@@ -113,9 +123,10 @@ function setBadgeAndIconAction(tabId, ruleSets) {
   }
 }
 
-function triggerAutofillingIfEnabled(tab, ruleSets) {
+async function triggerAutofillingIfEnabled(tab, ruleSets) {
   // todo check if autofill enabled ...
-  sendMessageToContentScript(tab, "fill_form", ruleSets[0]); // TODO Defaulting to 1st ruleSet not so smart?
+  const access = await integr.hasDomainPermission(tab);
+  access && sendMessageToContentScript(tab, "fill_form", ruleSets[0]); // TODO Defaulting to 1st ruleSet not so smart?
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ listeners:installationOf
@@ -145,11 +156,21 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   // - Also triggered when navigating to an anchor on the same page or back
 });
 
+function tabDomainPermission(tab) {
+  return { origins: [`${new URL(tab.url).origin}/*`] };
+}
+
 /* Only triggered if there is 0-1 ruleSets (i.e. of there is no popup win). */
-chrome.action.onClicked.addListener((tab) => {
-  findMatchingRules(tab.url, function (ruleSets) {
-    sendMessageToContentScript(tab, "fill_form", ruleSets[0]);
-  });
+chrome.action.onClicked.addListener(async (tab) => {
+
+  const access = integr.ensureDomainPermission(tab);
+  if (access) {
+    return rs.findMatchingRules(tab.url)
+      .then((ruleSets) => sendMessageToContentScript(tab, "fill_form", ruleSets[0]));
+  } else {
+    console.error("Aborting, permissions to access the current domain not granted");
+    throw Error("Aborting, permissions to access the current domain not granted");
+  }
 });
 
 chrome.contextMenus.onClicked.addListener(ctxMenuHandler);

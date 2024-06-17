@@ -1,3 +1,4 @@
+// NOTE: Only used for testing now (6/2024) [if that actually works]
 module.exports = function (grunt) {
 
   // Project configuration.

@@ -530,6 +530,26 @@ async function init() {
 // node_modules/webext-dynamic-content-scripts/distribution/index.js
 void init();
 
+// node_modules/webext-dynamic-content-scripts/distribution/utils.js
+function isContentScriptStaticallyRegistered(url) {
+  return Boolean(chrome.runtime.getManifest().content_scripts?.flatMap((script) => script.matches).some((pattern) => patternToRegex(pattern).test(url)));
+}
+async function isContentScriptDynamicallyRegistered(url) {
+  const { origins } = await getAdditionalPermissions({
+    strictOrigins: false
+  });
+  return patternToRegex(...origins).test(url);
+}
+async function isContentScriptRegistered(url) {
+  if (isContentScriptStaticallyRegistered(url)) {
+    return "static";
+  }
+  if (await isContentScriptDynamicallyRegistered(url)) {
+    return "dynamic";
+  }
+  return false;
+}
+
 // node_modules/webext-permission-toggle/node_modules/webext-detect-page/index.js
 var cache = true;
 function isCurrentPathname(path) {
@@ -1250,5 +1270,6 @@ function addPermissionToggle(options) {
   });
 }
 export {
-  addPermissionToggle
+  addPermissionToggle,
+  isContentScriptRegistered
 };

@@ -1,15 +1,16 @@
-import * as rs from "./shared/rules-store.js";
-import * as integr from "./shared/integration.js";
-import { addPermissionToggle } from './lib/bundled-npm-deps.js';
-
-addPermissionToggle();
-
 /** 
  * An environment that lives independent of any other window or tab,
  * which can observe and act in response to events. In particular, it
  * handles browsing and extension events and invoke the content script
  * (testofill-run.js).
  */
+
+import * as rs from "./shared/rules-store.js";
+import * as integr from "./shared/integration.js";
+import { addPermissionToggle } from './lib/bundled-npm-deps.js';
+
+// Add 'Enable Testofill... on this domain' to the extension's ctx menu
+addPermissionToggle();
 
 //---------------------------------------------------------------- reusable: ruleSets, content, storage
 /* Get the rules and try to apply them to this page, if matched */
@@ -155,10 +156,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   // - Also triggered for new tab, url=chrome://newtab/
   // - Also triggered when navigating to an anchor on the same page or back
 });
-
-function tabDomainPermission(tab) {
-  return { origins: [`${new URL(tab.url).origin}/*`] };
-}
 
 /* Only triggered if there is 0-1 ruleSets (i.e. of there is no popup win). */
 chrome.action.onClicked.addListener(async (tab) => {

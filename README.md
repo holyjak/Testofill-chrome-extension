@@ -177,6 +177,10 @@ ChangeLog
 ----------------
 
 - Newer changes - see above in the Web Store info part.
+- 2024-06-17 v0.16 
+  - update for Chrome manifest v3
+  - make permissions optional, request them for the current site when an
+    action triggered 
 - 2019-02-21 v0.13 - Improve React support (focus elements before changing them - works better with some components)
 - 2019-02-20 v0.12 - Save forms ignores iframes instead of being confused by them
 - 2019-02-19 v0.11 Save forms accepts fields that have only id and no name

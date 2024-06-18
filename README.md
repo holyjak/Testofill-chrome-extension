@@ -261,6 +261,6 @@ In Chrome, at `chrome://extensions/`, click [Pack extension], select `./src/exte
 
 ### Publication
 
-1. Run `npm run bundle-deps` to refresh `extension/lib/bundled-npm-deps.js` if necessary
-2. In Chrome, at `chrome://extensions/`, click [Pack extension], select `./src/extension` and the stored `extension.pem`.
-3. Go to [Chrome Dev Dashboard](https://chrome.google.com/webstore/developer/edit/pkgdgajoinhkfldibdaledjikboognnl) for the plugin and upload the generated `.crx`.
+1. Run `npm run bundle-deps` to refresh `src/extension/lib/bundled-npm-deps.js` if necessary
+2. Zip `./src/extension` (so that the archive will contain ./manifest.json etc).
+3. Go to [Chrome Dev Dashboard](https://chrome.google.com/webstore/developer/edit/pkgdgajoinhkfldibdaledjikboognnl) for the extension and upload the generated `.zip`.

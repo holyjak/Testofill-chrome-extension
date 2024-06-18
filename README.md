@@ -28,6 +28,7 @@ Tip: You need to enable the extension in Incognito mode on the Extensions page i
 Security tip: Only allow the plugin access to the sites where you use it - see "Add or remove access to a specific site" at https://support.google.com/chrome_webstore/answer/2664769 (right click - Manage Extensions - under Permissions, change "On all sites" to "On click" (for the current tab only) or "On specific sites").
 
 Change log:
+  * 0.16 - make permissions optional, assignable by domain
   * 0.15 - Update to the Extension Manifest v3, as required by Chrome
   * 0.14 - Fix to really ignore iframes, which broke "save forms"
   * 0.13 - Improve React support (focus elements before changing them - works better with some components)
@@ -173,7 +174,7 @@ manually set the label, using the `textContent` attribute. Ex.:
 }
 ```
 
-ChangeLog
+ChangeLog, detailed
 ----------------
 
 - Newer changes - see above in the Web Store info part.
@@ -242,11 +243,11 @@ Development
 -----------
 
 Form filling is implemented in the content script
-[`testofill-run.js`](src/testofill-run.js). See especially `fillForms` that finds fields matched by rules in a rule set and fills them via `fillField`, which applies a rule (its value, textContent etc.) to a field.
+[`testofill-run.js`](src/extension/content/testofill-run.js). See especially `fillForms` that finds fields matched by rules in a rule set and fills them via `fillField`, which applies a rule (its value, textContent etc.) to a field.
 
-[`service_worker.js`](src/service_worker.js) contains the crucial `findMatchingRules`, which gets rule sets from options, finds those matching the current URL, and calls the provided callback for them. Behavior of the context menu and badge icon are defined here as well.
+[`service-worker.js`](src/extension/service-worker.js) contains the crucial `findMatchingRules`, which gets rule sets from options, finds those matching the current URL, and calls the provided callback for them. Behavior of the context menu and badge icon are defined here as well.
 
-[`popup.js`](src/popup.js) defines the selection popup that opens when multiple rule sets match the current URL and that triggers form filling when one is selected.
+[`popup.js`](src/extension/popup.js) defines the selection popup that opens when multiple rule sets match the current URL and that triggers form filling when one is selected.
 
 ### Initial setup
 
@@ -261,7 +262,7 @@ Both are installed as npm modules and need to be bundled with the extension via 
 ### Manual testing
 
 1. Run `cd test/; python -m SimpleHTTPServer 1111`
-2. Enable the plugin (in Extensions dev mode, do Load unpacked from src/extension/ after executing `grunt`)
+2. Enable the plugin (in Extensions dev mode, do Load unpacked from src/extension/)
 3. Copy and paste the ruleset from the web page into the plugin options (switch from Tree to Code view)
 4. Access http://localhost:1111/test.html#one - testofill should autofill the form, press [Reset] and compare, invoke Testofill manually
 5. Access http://localhost:1111/test.html#two - here we have two rulesets so invoking Testofill should show a popup with their names

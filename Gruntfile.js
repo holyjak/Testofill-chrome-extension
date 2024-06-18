@@ -1,10 +1,15 @@
-module.exports = function(grunt) {
+// NOTE: Only used for testing now (6/2024) [if that actually works]
+module.exports = function (grunt) {
 
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-      src: ['Gruntfile.js', 'src/content/*.js','src/extension/*.js'],
+      src: ['Gruntfile.js',
+      'src/extension/*.js',
+      ,'src/extension/content/*.js',
+      'src/extension/shared/*.js',
+      ],
       options: {
         esversion: 6
         //maxlen: 80,
@@ -21,42 +26,20 @@ module.exports = function(grunt) {
       },
       all: { src: ['test/*.js'] }
     },
-    concat: {
-       content: {
-          src: ['lib/shared/*.js','lib/content/*.js','src/content/*.js'],
-          dest: 'src/extension/generated/testofill-content-packed.js'
-       }
-//        ,extension: {
-//           src: ['lib/shared/*.js','lib/extension/**/*.js'],
-//           dest: 'src/extension/generated/extension-lib-packed.js'
-//        }
-    },
-    compress: {
-      main: {
-        options: {
-          archive: 'Testofill-dist.zip'
-        },
-        expand: true,
-        cwd: 'src/extension/',
-        src: ['**'],
-      }
-    },
     watch: {
       scripts: {
-        files: ['Gruntfile.js', 'src/**/*.js', '!src/extension/generated/**/*', 'test/**/*.js'],
+        files: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
         tasks: ['development']
       }
     }
   });
 
   // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-simple-mocha');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('development', ['jshint', 'simplemocha','concat']);
-  grunt.registerTask('default', ['jshint', 'simplemocha','concat','compress']);
+  grunt.registerTask('development', ['jshint', 'simplemocha']);
+  grunt.registerTask('default', ['jshint', 'simplemocha']);
 
 };

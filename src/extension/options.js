@@ -1,3 +1,4 @@
+import * as rs from "./shared/rules-store.js";
 // Options storage
 
 function showStatus(message, type) {
@@ -14,8 +15,8 @@ function showStatus(message, type) {
   statusElm.innerHTML = '<span style="color:' + color + '" class="status-msg">' + message + '</span>';
 
   // TODO fix this timeout reset, does not work:
-  setTimeout(function() {
-    status.innerHTML = "";
+  setTimeout(function () {
+    statusElm.innerHTML = "";
   }, 750);
 }
 
@@ -24,15 +25,9 @@ function showError(message) {
 }
 
 function saveToStorage(json) { // see also events.js: mergeIntoOptions()
-  chrome.runtime.getBackgroundPage(function(eventsWin){
-    eventsWin.saveRulesToStorage(json, function(error) {
-      if (typeof error === 'undefined') {
-        showStatus("Options Saved.");
-      } else {
-        showError("Saving failed: " + error);
-      }
-    });
-  });
+  rs.saveRulesToStorage(json)
+    .then(_ => showStatus("Options Saved."))
+    .catch((error) => showError("Saving failed: " + error));
 }
 
 function save_options(editor) {
@@ -41,22 +36,21 @@ function save_options(editor) {
 }
 
 function restore_options(editor) {
-
   var exampleJson = {
     "forms": {
       "duckduckgo.com": [
         {
           "name": "(optional) Search for testofill",
-          "doc": "(optional) This is an example rule set; it is not saved so click [Save] if you want to use it",
+          "doc": "(optional) This is an example rule set; it **IS NOT SAVED** so click [Save] if you want to use it",
           "fields": [
-            {"query": "[name='q']", "value": "Testofill rocks!"}
+            { "query": "[name='q']", "value": "Testofill rocks!" }
           ]
         }
       ]
     }
   };
 
-  chrome.storage.local.get('testofill.rules', function(items) {
+  chrome.storage.local.get('testofill.rules', function (items) {
     if (typeof chrome.runtime.lastError === "undefined") {
       var rules = items['testofill.rules'];
       console.log("Rules restored: ", rules);
@@ -79,7 +73,7 @@ function restore_options(editor) {
 function init() {
   var container = document.getElementById("jsoneditor");
   var options = {
-    change: function() { showStatus("Configuration changed, don't forget to save it", "info"); },
+    change: function () { showStatus("Configuration changed, don't forget to save it", "info"); },
     mode: 'tree',
     modes: ['tree', 'code'], // allowed modes
     error: function (err) {
@@ -90,8 +84,8 @@ function init() {
 
   restore_options(editor);
 
-  document.querySelector('.save').addEventListener('click', function() { save_options(editor); });
-  document.querySelector('.reset').addEventListener('click', function() {
+  document.querySelector('.save').addEventListener('click', function () { save_options(editor); });
+  document.querySelector('.reset').addEventListener('click', function () {
     restore_options(editor);
     showStatus("Configuration reset to the saved one", "info");
   });

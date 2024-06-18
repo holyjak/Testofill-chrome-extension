@@ -4,7 +4,7 @@ var expect = require('chai').expect, Chance = require('chance');
 GLOBAL.chance = new Chance();
 GLOBAL._ = require('underscore');
 
-var gen = require('../src/content/generative.js');
+var gen = require('../src/extension/content/generative.js');
 
 describe('generative should parse', function () {
     it('simple literal', function () {

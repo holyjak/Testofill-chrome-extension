@@ -6,18 +6,15 @@
 Goal: Enable testers to fill forms automatically/on-demand with predefined and/or generated values.
 It is possible to define and choose from multiple sets of values for a given form.
 
-State: Automatic/on-demand form filling with predefined values; possible to save values from a form.
-No random input data generation yet (or soon).
-
 Fields are found using CSS3 selectors (via [Sizzle](https://github.com/jquery/sizzle/wiki/Sizzle-Documentation#wiki-selectors)). The configuration of the plugin is a JSON object.
-Forms are filled either automatically or when you click the plugin icon.
+Forms are filled either automatically or when you click the plugin icon / context menu.
 
 Based on [work by Akkunchoi](http://akkunchoi.github.io/Autofill-chrome-extension).
 
 Description from Chrome Web Shop
 --------------------------------
 
-Testofill allows you to define one or more sets of rules for filling forms on a particular page and to fill them in automatically or on demand with hardcoded or random values. It targets people that can write little CSS (such as "[name='myfield']") and that need to be able to choose from a sets of values to fill in. A typical example is a tester that needs to repeatedly fill in different search criteria to test her app and thus wants to define rule sets such as "Simple book search" and "Advanced book search".
+Testofill allows you to define one or more sets of rules for filling forms on a particular page and to fill them in automatically or on demand with hardcoded or random values. It targets people that can write little CSS (such as "[name='myfield']"), are comfortable with JSON, and that need to be able to choose from sets of values to fill in. A typical example is a tester that needs to repeatedly fill in different search criteria to test her app and thus wants to define rule sets such as "Simple book search" and "Advanced book search".
 
 The main advantages are being able to have multiple sets of values for a single form, having full access to and control over these values, and ability to generate random values. It is also possible to create rules automatically from a filled form and adjust them later.
 
@@ -25,9 +22,9 @@ See a short demo here: https://youtu.be/eXamopxgvFI
 
 Tip: You need to enable the extension in Incognito mode on the Extensions page if you want to be able to use it when Incognito.
 
-Security tip: Only allow the plugin access to the sites where you use it - see "Add or remove access to a specific site" at https://support.google.com/chrome_webstore/answer/2664769 (right click - Manage Extensions - under Permissions, change "On all sites" to "On click" (for the current tab only) or "On specific sites").
-
 Change log:
+  * 0.16 - make permissions optional, assignable by domain
+  * 0.15 - Update to the Extension Manifest v3, as required by Chrome
   * 0.14 - Fix to really ignore iframes, which broke "save forms"
   * 0.13 - Improve React support (focus elements before changing them - works better with some components)
   * 0.12 - Save forms ignores iframes instead of being confused by them
@@ -137,19 +134,11 @@ or follow the manual installation instructions below.
 
 First, clone/download this repository.
 
-Then run in this directory:
-
-```shell
-    npm install
-    npm i grunt-cli -g
-    grunt # This will produce ./src/extension/generated/testofill-content-packed.js
-```
-
 Next, open the Extensions page in Chrome, check "Developer mode"
 and click "Load unpacked extension...", navigate to the `src/extension/`
 directory of this repo. (You can then also click "Pack extension...".)
 
-You also likely want to check "Allow in incognito mode" for the extension if you use incognito windows for testing.
+You likely also want to check "Allow in incognito mode" for the extension if you use incognito windows for testing.
 
 After the installation, open the extension's options and modify at will.
 
@@ -172,10 +161,14 @@ manually set the label, using the `textContent` attribute. Ex.:
 }
 ```
 
-ChangeLog
+ChangeLog, detailed
 ----------------
 
 - Newer changes - see above in the Web Store info part.
+- 2024-06-18 v0.16 
+  - update for Chrome manifest v3
+  - make permissions optional, request them for the current site when an
+    action triggered 
 - 2019-02-21 v0.13 - Improve React support (focus elements before changing them - works better with some components)
 - 2019-02-20 v0.12 - Save forms ignores iframes instead of being confused by them
 - 2019-02-19 v0.11 Save forms accepts fields that have only id and no name
@@ -237,21 +230,37 @@ Development
 -----------
 
 Form filling is implemented in the content script
-[`testofill-run.js`](src/testofill-run.js). See especially `fillForms` that finds fields matched by rules in a rule set and fills them via `fillField`, which applies a rule (its value, textContent etc.) to a field.
+[`testofill-run.js`](src/extension/content/testofill-run.js). See especially `fillForms` that finds fields matched by rules in a rule set and fills them via `fillField`, which applies a rule (its value, textContent etc.) to a field.
 
-[`events.js`](src/events.js) contains the crucial `findMatchingRules`, which gets rule sets from options, finds those matching the current URL, and calls the provided callback for them. Behavior of the context menu and badge icon are defined here as well.
+[`service-worker.js`](src/extension/service-worker.js) contains the crucial `findMatchingRules`, which gets rule sets from options, finds those matching the current URL, and calls the provided callback for them. Behavior of the context menu and badge icon are defined here as well.
 
-[`popup.js`](src/popup.js) defines the selection popup that opens when multiple rule sets match the current URL and that triggers form filling when one is selected.
+[`popup.js`](src/extension/popup.js) defines the selection popup that opens when multiple rule sets match the current URL and that triggers form filling when one is selected.
+
+### Initial setup
+
+Run `npm install`, then `npm run bundle-deps`.
+
+### Note on permissions and libs
+
+We don't want to ask for access to all sites, rather opting for the user to manually enable the plugin for each site of interest. This is done by the module `webext-permission-toggle`, which adds to the extension's menu, next to Options, a toggle to enable it for a particular domain. Then, the inclusion of `webext-dynamic-content-scripts` will automatically register our content script (from the manifest) with that domain.
+
+Both are installed as npm modules and need to be bundled with the extension via `npm run bundle-deps`.
 
 ### Manual testing
 
 1. Run `cd test/; python -m SimpleHTTPServer 1111`
-2. Enable the plugin
-3. Copy and paste the ruleset into the plugin options (switch from Tree to Code view)
+2. Enable the plugin (in Extensions dev mode, do Load unpacked from src/extension/)
+3. Copy and paste the ruleset from the web page into the plugin options (switch from Tree to Code view)
 4. Access http://localhost:1111/test.html#one - testofill should autofill the form, press [Reset] and compare, invoke Testofill manually
 5. Access http://localhost:1111/test.html#two - here we have two rulesets so invoking Testofill should show a popup with their names
 6. Similarly for http://localhost:1111/test-react.html
 
+### Permission check
+
+In Chrome, at `chrome://extensions/`, click [Pack extension], select `./src/extension` and the stored `extension.pem`. Then drag and drop the created .crx to that page to install it and see what permission warnings it would display. (The ext. will be unusable - use [Load unpacked] for that)
+
 ### Publication
 
-Run `grunt` then go to [Chrome Dev Dashboard](https://chrome.google.com/webstore/developer/edit/pkgdgajoinhkfldibdaledjikboognnl) for the plugin and upload the generated `./Testofill-dist.zip`.
+1. Run `npm run bundle-deps` to refresh `extension/lib/bundled-npm-deps.js` if necessary
+2. In Chrome, at `chrome://extensions/`, click [Pack extension], select `./src/extension` and the stored `extension.pem`.
+3. Go to [Chrome Dev Dashboard](https://chrome.google.com/webstore/developer/edit/pkgdgajoinhkfldibdaledjikboognnl) for the plugin and upload the generated `.crx`.

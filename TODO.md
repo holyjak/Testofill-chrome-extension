@@ -1,18 +1,20 @@
 # TODO
 
-## Permissions
 
-Using the `activeTab` permission does not pop up warning to users when installing about access to all possible; only grants access after the user invokes the extension and until closed/navigated away - contrary to `tabs`.
+## Permissions [OUTDATED]
 
-See https://developer.chrome.com/extensions/activeTab .
+The `tabs`permission gives a warning about having access to the browsing history.
 
-=>
+* Consider making `tabs` optional =>
+  * being able to update browser action icon when accessing a url - but it does not work well anyway
+  * not being able to auto-fill until the ext. has been manually invoked at least once in the tab - 
+    could add a shortcut such as Alt+F to fill in, then it would be auto - see https://developer.chrome.com/docs/extensions/reference/api/commands
+    Check https://github.com/GoogleChrome/chrome-extensions-samples/blob/main/functional-samples/sample.optional_permissions/newtab.js for
+    checking, requesting permissions
 
-* Consider making `tabs` optional (=> not being able to update browser action icon - but it does not work well anyway)
+FYI: activeTab gives you:
 
-activeTab gives you:
-
-* Call tabs.executeScript or tabs.insertCSS on that tab.
+* Call runtime.executeScript or runtime.insertCSS on that tab.
 * Get the URL, title, and favicon for that tab via an API that returns a tabs.Tab object (essentially, activeTab grants the tabs permission temporarily).
 
 ## Generative
@@ -29,7 +31,3 @@ activeTab gives you:
 * Make browser action icon more reliable
 * Better logging of save form when not matches
 * Make it work with forms using React - trigger events it listens to; experiment with http://jsfiddle.net/zcz1p35n/4/ 
-
-## Fixme
-
-* fill called twice (duckgo and simple q fill w/ generate)

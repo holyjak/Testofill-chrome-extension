@@ -1,20 +1,22 @@
 {
   "name": "Testofill",
   "version": "1.0.0",
+  "type": "module",
   "devDependencies": {
-    "grunt": "~1.0.3",
-    "grunt-contrib-concat": "~1.0.1",
-    "grunt-contrib-jshint": "2.0.0",
-    "grunt-contrib-compress": "~1.4.3",
-    "grunt-simple-mocha": "~0.4.0",
-    "underscore": "~1.9.1",
-    "grunt-contrib-watch": "~1.1.0",
     "chai": "~4.2.0",
-    "chance": "~1.0.18"
+    "chance": "~1.0.18",
+    "esbuild": "0.21.4",
+    "grunt": "~1.0.3",
+    "grunt-contrib-jshint": "2.0.0",
+    "grunt-contrib-watch": "~1.1.0",
+    "grunt-simple-mocha": "~0.4.0",
+    "underscore": "~1.9.1"
   },
   "scripts": {
-    "development": "grunt development",
-    "watch": "grunt watch",
-    "build": "grunt"
+    "bundle-deps": "esbuild --bundle src/bundled-npm-deps-entrypoint.js --outfile=src/extension/lib/bundled-npm-deps.js --format=esm"
+  },
+  "dependencies": {
+    "webext-dynamic-content-scripts": "^10.0.1",
+    "webext-permission-toggle": "^5.0.0"
   }
 }

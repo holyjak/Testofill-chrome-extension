@@ -18,7 +18,7 @@ Testofill allows you to define one or more sets of rules for filling forms on a 
 
 The main advantages are being able to have multiple sets of values for a single form, having full access to and control over these values, and ability to generate random values. It is also possible to create rules automatically from a filled form and adjust them later.
 
-See a short demo here: https://youtu.be/eXamopxgvFI
+See a short demo here: https://youtu.be/iDkSwpKd3NQ
 
 Tip: You need to enable the extension in Incognito mode on the Extensions page if you want to be able to use it when Incognito.
 

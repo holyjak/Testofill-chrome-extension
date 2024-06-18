@@ -18,9 +18,12 @@ async function findMatchingRules(currentUrl, ruleSetsCallback, _callIfNone) {
   rs.findMatchingRules(currentUrl).then(ruleSetsCallback);
 }
 
+let postponedMsg = null;
+
 function sendMessageToContentScript(tab, messageId, payload, responseCallback) {
   integr.sendMessageToContentScript(tab, messageId, payload)
-    .then(x => { if (x) responseCallback(x); });
+    .then(x => { if (responseCallback) responseCallback(x); })
+    .catch(err => postponedMsg = { tab, messageId, payload, responseCallback });
 }
 
 /**
@@ -199,3 +202,28 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 
   }
 });
+
+// ------------------------------------------------------------ message handling
+/** Listen for message from the popup or ctx. menu with the selected ruleSet */
+function handleMessage({ id, payload }, sender, sendResponseFn) {
+  if (id === "content_script_loaded") {
+    if (postponedMsg) {
+      const { tab, messageId, payload, responseCallback } = postponedMsg;
+      if (tab.url === sender.tab.url) {
+        sendMessageToContentScript(tab, messageId, payload, responseCallback);
+      } else {
+        console.debug('handleMessage:content_script_loaded - ignoring postponed msg, for another tab',
+          { postponed: tab2.url, current: tab.url }
+        );
+      }
+    }
+  } else {
+    console.warn("Unsupported message id received: " + id, message);
+  }
+
+  return false; // sendResponseFn is not async
+}
+
+if (!chrome.runtime.onMessage.hasListeners()) {
+  chrome.runtime.onMessage.addListener(handleMessage);
+}

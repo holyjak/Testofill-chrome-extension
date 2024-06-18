@@ -5,9 +5,9 @@
  * the user gives access permission for a domain, it will automatically inject
  * the content script (obtained from the manifest) into the page. */
 import 'webext-dynamic-content-scripts';
-import { isContentScriptRegistered } from 'webext-dynamic-content-scripts/utils.js';
+//import { isContentScriptRegistered } from 'webext-dynamic-content-scripts/utils.js';
 
 /* A module to add an option to enable the extension for a domain into the
  * extension's own menu. */
 import addPermissionToggle from 'webext-permission-toggle';
-export { addPermissionToggle, isContentScriptRegistered }; // re-export for the service-worker & friends
+export { addPermissionToggle }; // re-export for the service-worker & friends

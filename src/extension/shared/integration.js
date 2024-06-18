@@ -3,8 +3,6 @@
  * plus permission support.
  */
 
-//import { isContentScriptRegistered } from '../lib/bundled-npm-deps.js'; // Returns before the content script is ready :'(
-
 function tabDomainPermission(tab) {
   return { origins: [`${new URL(tab.url).origin}/*`] };
 }
@@ -14,9 +12,8 @@ function tabDomainPermission(tab) {
  * Returns true/false.
 */
 export function ensureDomainPermission(tab) {
-  // FIXME Right after permissions are granted, the auto-injected content script
-  // isn't immediately avail., so we cannot continue with 
-  // the action and the user needs to retry.
+  // NOTE: Right after permissions are granted, the auto-injected content script
+  // isn't immediately avail. => can't continue with the action
   return chrome.permissions.request(tabDomainPermission(tab))
 }
 export function hasDomainPermission(tab) {
@@ -30,7 +27,7 @@ export async function sendMessageToContentScript(tab, messageId, payload) {
     console.debug("Response from content script for", messageId, resp);
     return resp;
   } catch (err) {
-    console.error("Failed to send message to content script:", err.message);
+    console.error("Failed to send message to content script:", err.message, err);
     // This likely means the user had not granted us host permissions
     // on this domain
     throw err;

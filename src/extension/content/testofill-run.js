@@ -228,4 +228,5 @@ function handleMessage(message, sender, sendResponseFn) {
 // NOTE: `chrome.runtime.onMessage.hasListener(handleMessage` always returns false?!
 if (!chrome.runtime.onMessage.hasListeners()) {
   chrome.runtime.onMessage.addListener(handleMessage);
+  chrome.runtime.sendMessage({ id: 'content_script_loaded' });
 }

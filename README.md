@@ -6,26 +6,21 @@
 Goal: Enable testers to fill forms automatically/on-demand with predefined and/or generated values.
 It is possible to define and choose from multiple sets of values for a given form.
 
-State: Automatic/on-demand form filling with predefined values; possible to save values from a form.
-No random input data generation yet (or soon).
-
 Fields are found using CSS3 selectors (via [Sizzle](https://github.com/jquery/sizzle/wiki/Sizzle-Documentation#wiki-selectors)). The configuration of the plugin is a JSON object.
-Forms are filled either automatically or when you click the plugin icon.
+Forms are filled either automatically or when you click the plugin icon / context menu.
 
 Based on [work by Akkunchoi](http://akkunchoi.github.io/Autofill-chrome-extension).
 
 Description from Chrome Web Shop
 --------------------------------
 
-Testofill allows you to define one or more sets of rules for filling forms on a particular page and to fill them in automatically or on demand with hardcoded or random values. It targets people that can write little CSS (such as "[name='myfield']") and that need to be able to choose from a sets of values to fill in. A typical example is a tester that needs to repeatedly fill in different search criteria to test her app and thus wants to define rule sets such as "Simple book search" and "Advanced book search".
+Testofill allows you to define one or more sets of rules for filling forms on a particular page and to fill them in automatically or on demand with hardcoded or random values. It targets people that can write little CSS (such as "[name='myfield']"), are comfortable with JSON, and that need to be able to choose from sets of values to fill in. A typical example is a tester that needs to repeatedly fill in different search criteria to test her app and thus wants to define rule sets such as "Simple book search" and "Advanced book search".
 
 The main advantages are being able to have multiple sets of values for a single form, having full access to and control over these values, and ability to generate random values. It is also possible to create rules automatically from a filled form and adjust them later.
 
 See a short demo here: https://youtu.be/eXamopxgvFI
 
 Tip: You need to enable the extension in Incognito mode on the Extensions page if you want to be able to use it when Incognito.
-
-Security tip: Only allow the plugin access to the sites where you use it - see "Add or remove access to a specific site" at https://support.google.com/chrome_webstore/answer/2664769 (right click - Manage Extensions - under Permissions, change "On all sites" to "On click" (for the current tab only) or "On specific sites").
 
 Change log:
   * 0.16 - make permissions optional, assignable by domain
@@ -139,19 +134,11 @@ or follow the manual installation instructions below.
 
 First, clone/download this repository.
 
-Then run in this directory:
-
-```shell
-    npm install
-    npm i grunt-cli -g
-    grunt # This will produce ./src/extension/generated/testofill-content-packed.js
-```
-
 Next, open the Extensions page in Chrome, check "Developer mode"
 and click "Load unpacked extension...", navigate to the `src/extension/`
 directory of this repo. (You can then also click "Pack extension...".)
 
-You also likely want to check "Allow in incognito mode" for the extension if you use incognito windows for testing.
+You likely also want to check "Allow in incognito mode" for the extension if you use incognito windows for testing.
 
 After the installation, open the extension's options and modify at will.
 
@@ -178,7 +165,7 @@ ChangeLog, detailed
 ----------------
 
 - Newer changes - see above in the Web Store info part.
-- 2024-06-17 v0.16 
+- 2024-06-18 v0.16 
   - update for Chrome manifest v3
   - make permissions optional, request them for the current site when an
     action triggered 

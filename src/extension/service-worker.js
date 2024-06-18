@@ -3,6 +3,7 @@
  * which can observe and act in response to events. In particular, it
  * handles browsing and extension events and invoke the content script
  * (testofill-run.js).
+ * BEWARE: It is transient, the browser can kill and re-create it at any time.
  */
 
 import * as rs from "./shared/rules-store.js";
@@ -23,6 +24,9 @@ let postponedMsg = null;
 function sendMessageToContentScript(tab, messageId, payload, responseCallback) {
   integr.sendMessageToContentScript(tab, messageId, payload)
     .then(x => { if (responseCallback) responseCallback(x); })
+    // Most likely failed b/c the content script is not listening b/c we
+    // lack permissions for this domain, and have asked the user to grant them.
+    // If granted then the content script gets loaded and notifies us => retry.
     .catch(err => postponedMsg = { tab, messageId, payload, responseCallback });
 }
 
@@ -31,7 +35,7 @@ function sendMessageToContentScript(tab, messageId, payload, responseCallback) {
  * @param rules {fn} function to all; params: error {optional} - error message upon failure
  */
 function saveRulesToStorage(rules, responseCallback) {
-  rs.saveRulesToStorage(rules).then(() => responseCallback()).catch((error) => responseCallback(error));
+  rs.saveRulesToStorage(rules).then(() => responseCallback()).catch(responseCallback);
 }
 //---------------------------------------------------------------- listeners
 
@@ -59,7 +63,7 @@ function ctxMenuFillFormHandler(tab) {
       // Apply directly
       sendMessageToContentScript(tab, "fill_form", ruleSets[0]);
     } else {
-      // Show popup // TODO does not work; also, open rather popup not full window
+      // Show popup
       chrome.windows.create({ url: 'popup.html#' + tab.id, type: 'popup', width: 350, height: 200 });
     }
   }, true);

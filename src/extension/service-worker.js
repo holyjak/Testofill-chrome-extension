@@ -221,6 +221,13 @@ function handleMessage({ id, payload }, sender, sendResponseFn) {
         );
       }
     }
+  } else if (id === 'visual_mode_change') {
+    chrome.action.setIcon({
+      path: {
+        16: `autofill_16x16-${payload.mode}.png`,
+        128: `autofill_128x128-${payload.mode}.png`
+      },
+    });
   } else {
     console.warn("Unsupported message id received: " + id, message);
   }

@@ -220,8 +220,16 @@ function handleMessage(message, sender, sendResponseFn) {
   } else {
     console.log("ERROR: Unsupported message id received: " + message.id, message);
   }
-
 }
+
+function onColorSchemeChange(mql) {
+  chrome.runtime.sendMessage({
+    id: 'visual_mode_change', payload: { mode: mql.matches ? 'dark' : 'light' }
+  });
+}
+
+const mql = window.matchMedia('(prefers-color-scheme: dark)')
+mql.addEventListener('change', onColorSchemeChange);
 
 // Add listeners - invoked whenever the user presses the browser action icon or when
 // we (re)insert the content script => avoid adding the listener if already there
@@ -229,4 +237,5 @@ function handleMessage(message, sender, sendResponseFn) {
 if (!chrome.runtime.onMessage.hasListeners()) {
   chrome.runtime.onMessage.addListener(handleMessage);
   chrome.runtime.sendMessage({ id: 'content_script_loaded' });
+  onColorSchemeChange(mql);
 }

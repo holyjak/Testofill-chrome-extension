@@ -1,4 +1,4 @@
-![icon](src/extension/autofill_16x16.png) Testofill, the Form Filler for Testers Chrome Extension
+![icon](src/extension/autofill_16x16-light.png) Testofill, the Form Filler for Testers Chrome Extension
 =======================================================================================
 
 [Install Testofill from Chrome Web Store](https://chrome.google.com/webstore/detail/testofill-form-filler-for/pkgdgajoinhkfldibdaledjikboognnl?hl=en-US)
@@ -23,6 +23,8 @@ See a short demo here: https://youtu.be/iDkSwpKd3NQ
 Tip: You need to enable the extension in Incognito mode on the Extensions page if you want to be able to use it when Incognito.
 
 Change log:
+  * 2.0.1 - switch to a more sensible version number; make the icon more unique,
+           and add a dark mode one; add 128px icon
   * 0.16 - make permissions optional, assignable by domain
   * 0.15 - Update to the Extension Manifest v3, as required by Chrome
   * 0.14 - Fix to really ignore iframes, which broke "save forms"
@@ -262,5 +264,5 @@ In Chrome, at `chrome://extensions/`, click [Pack extension], select `./src/exte
 ### Publication
 
 1. Run `npm run bundle-deps` to refresh `src/extension/lib/bundled-npm-deps.js` if necessary
-2. Zip `./src/extension` (so that the archive will contain ./manifest.json etc).
+2. [Zip the extension](https://developer.chrome.com/docs/webstore/prepare) `./src/extension` (so that the archive will contain ./manifest.json etc).
 3. Go to [Chrome Dev Dashboard](https://chrome.google.com/webstore/developer/edit/pkgdgajoinhkfldibdaledjikboognnl) for the extension and upload the generated `.zip`.

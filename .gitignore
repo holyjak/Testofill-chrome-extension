@@ -4,3 +4,4 @@ src/extension-libs.js
 src/testofill-content.js
 src/extension.crx
 src/extension.pem
+src/extension.zip

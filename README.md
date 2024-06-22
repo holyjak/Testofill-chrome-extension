@@ -163,10 +163,12 @@ manually set the label, using the `textContent` attribute. Ex.:
 }
 ```
 
-ChangeLog, detailed
+ChangeLog (&lt; v0.16), detailed
 ----------------
 
-- Newer changes - see above in the Web Store info part.
+**Newer changes - see above in the Web Store info part.**
+
+- over v0.16 see above
 - 2024-06-18 v0.16 
   - update for Chrome manifest v3
   - make permissions optional, request them for the current site when an
